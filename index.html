@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="SHEETAL BAKERY & LIVE CAKE SHOP - Fresh Cakes, Bakery, Snacks, Cold Drinks and More.">
+
+    <title>SHEETAL BAKERY & LIVE CAKE SHOP</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="header">
+
+    <div class="header-container">
+
+
+        <!-- LOGO -->
+
+        <a href="#home" class="logo-area">
+
+            <img
+                src="images/logo.jpeg"
+                alt="SHEETAL BAKERY Logo"
+                class="logo"
+            >
+
+            <div class="logo-text">
+
+                <h1>SHEETAL BAKERY</h1>
+
+                <span>& LIVE CAKE SHOP</span>
+
+            </div>
+
+        </a>
+
+
+        <!-- DESKTOP NAVIGATION -->
+
+        <nav class="desktop-nav">
+
+            <a href="#home">Home</a>
+
+            <a href="#products">Cakes</a>
+
+            <a href="#products"
+               onclick="selectCategoryFromNav('Bakery')">
+                Bakery
+            </a>
+
+            <a href="#products"
+               onclick="selectCategoryFromNav('Snacks')">
+                Snacks
+            </a>
+
+            <a href="#products"
+               onclick="selectCategoryFromNav('Cold Drinks')">
+                Cold Drinks
+            </a>
+
+            <a href="#custom-cake">
+                Custom Cake
+            </a>
+
+        </nav>
+
+
+        <!-- HEADER ACTIONS -->
+
+        <div class="header-actions">
+
+            <button
+                class="icon-button"
+                onclick="focusSearch()"
+                title="Search">
+
+                🔍
+
+            </button>
+
+
+            <button
+                class="cart-button"
+                onclick="openCart()"
+                title="Cart">
+
+                🛒
+
+                <span id="cartCount">0</span>
+
+            </button>
+
+        </div>
+
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     HERO / HOME
+===================================================== -->
+
+<section class="hero" id="home">
+
+
+    <div class="hero-content">
+
+        <p class="hero-small">
+            FRESH • TASTY • ALWAYS
+        </p>
+
+
+        <h2>
+            Fresh Cakes<br>
+            For Every<br>
+            Moment
+        </h2>
+
+
+        <p class="hero-description">
+
+            Delicious freshly made cakes for
+            birthdays, anniversaries and every
+            special moment.
+
+        </p>
+
+
+        <button
+            class="primary-button"
+            onclick="scrollToProducts()">
+
+            Order Now
+
+            <span>→</span>
+
+        </button>
+
+    </div>
+
+
+    <div class="hero-image">
+
+        <img
+            src="images/home-cake.jpg"
+            alt="Fresh Chocolate Cake"
+            onerror="this.style.display='none'"
+        >
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+     SHOP SECTION
+===================================================== -->
+
+<section class="shop-section" id="products">
+
+
+    <!-- CATEGORY SIDEBAR -->
+
+    <aside class="category-sidebar">
+
+        <h2>Categories</h2>
+
+
+        <button
+            class="category active"
+            data-category="Cakes"
+            onclick="filterProducts('Cakes', this)">
+
+            <span>🎂</span>
+
+            <b>Cakes</b>
+
+        </button>
+
+
+        <button
+            class="category"
+            data-category="Bakery"
+            onclick="filterProducts('Bakery', this)">
+
+            <span>🥖</span>
+
+            <b>Bakery</b>
+
+        </button>
+
+
+        <button
+            class="category"
+            data-category="Snacks"
+            onclick="filterProducts('Snacks', this)">
+
+            <span>🍪</span>
+
+            <b>Snacks</b>
+
+        </button>
+
+
+        <button
+            class="category"
+            data-category="Cold Drinks"
+            onclick="filterProducts('Cold Drinks', this)">
+
+            <span>🥤</span>
+
+            <b>Cold Drinks</b>
+
+        </button>
+
+
+        <button
+            class="category"
+            data-category="Grocery"
+            onclick="filterProducts('Grocery', this)">
+
+            <span>🛒</span>
+
+            <b>Grocery</b>
+
+        </button>
+
+
+        <button
+            class="category"
+            data-category="Dry Fruits"
+            onclick="filterProducts('Dry Fruits', this)">
+
+            <span>🥜</span>
+
+            <b>Dry Fruits</b>
+
+        </button>
+
+
+        <button
+            class="category"
+            data-category="Chocolates"
+            onclick="filterProducts('Chocolates', this)">
+
+            <span>🍫</span>
+
+            <b>Chocolates</b>
+
+        </button>
+
+
+        <button
+            class="category"
+            data-category="All"
+            onclick="filterProducts('All', this)">
+
+            <span>🛍️</span>
+
+            <b>View All</b>
+
+        </button>
+
+
+    </aside>
+
+
+
+    <!-- PRODUCTS -->
+
+    <div class="shop-products">
+
+
+        <div class="products-header">
+
+
+            <div>
+
+                <p class="section-label">
+                    FRESH & DELICIOUS
+                </p>
+
+                <h2 id="categoryTitle">
+                    Cakes
+                </h2>
+
+            </div>
+
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search products..."
+                    autocomplete="off"
+                >
+
+                <span>🔍</span>
+
+            </div>
+
+
+        </div>
+
+
+        <div
+            class="products-grid"
+            id="productsGrid">
+
+            <!-- Products generated by JavaScript -->
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+     CUSTOM CAKE
+===================================================== -->
+
+<section
+    class="custom-cake-section"
+    id="custom-cake">
+
+
+    <div class="custom-cake-content">
+
+        <p class="section-label">
+            SPECIAL OCCASION?
+        </p>
+
+        <h2>
+            Design Your Own Cake
+        </h2>
+
+        <p>
+            Tell us your cake design, flavour,
+            size and occasion.
+        </p>
+
+    </div>
+
+
+    <form
+        class="custom-cake-form"
+        id="customCakeForm">
+
+
+        <div class="form-row">
+
+
+            <div class="form-group">
+
+                <label for="customName">
+                    Name *
+                </label>
+
+                <input
+                    type="text"
+                    id="customName"
+                    placeholder="Your name"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="customPhone">
+                    Phone *
+                </label>
+
+                <input
+                    type="tel"
+                    id="customPhone"
+                    placeholder="10 digit mobile number"
+                    maxlength="10"
+                    required
+                >
+
+            </div>
+
+
+        </div>
+
+
+        <div class="form-row">
+
+
+            <div class="form-group">
+
+                <label for="customFlavour">
+                    Flavour
+                </label>
+
+                <select id="customFlavour">
+
+                    <option>Chocolate</option>
+
+                    <option>Vanilla</option>
+
+                    <option>Black Forest</option>
+
+                    <option>Red Velvet</option>
+
+                    <option>Butterscotch</option>
+
+                    <option>Strawberry</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="customSize">
+                    Size
+                </label>
+
+                <select id="customSize">
+
+                    <option>½ kg</option>
+
+                    <option selected>1 kg</option>
+
+                    <option>2 kg</option>
+
+                    <option>3 kg</option>
+
+                    <option>Custom Size</option>
+
+                </select>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="customMessage">
+                Design / Message
+            </label>
+
+            <textarea
+                id="customMessage"
+                placeholder="Tell us about your cake design or message..."
+            ></textarea>
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="whatsapp-button">
+
+            Order Custom Cake on WhatsApp
+
+        </button>
+
+
+    </form>
+
+
+</section>
+
+
+
+<!-- =====================================================
+     PRODUCT MODAL
+===================================================== -->
+
+<div
+    class="modal-overlay"
+    id="productModal">
+
+
+    <div class="product-modal">
+
+
+        <button
+            class="modal-close"
+            onclick="closeProductModal()">
+
+            ×
+
+        </button>
+
+
+        <div class="product-modal-grid">
+
+
+            <div class="modal-product-image">
+
+                <img
+                    id="modalProductImage"
+                    src=""
+                    alt="Product"
+                >
+
+            </div>
+
+
+            <div class="modal-product-info">
+
+
+                <p
+                    class="modal-category"
+                    id="modalProductCategory">
+                </p>
+
+
+                <h2 id="modalProductName">
+                    Product
+                </h2>
+
+
+                <p
+                    class="modal-description"
+                    id="modalProductDescription">
+                </p>
+
+
+                <div class="modal-price"
+                     id="modalProductPrice">
+                    ₹0
+                </div>
+
+
+                <div
+                    class="size-section"
+                    id="sizeSection">
+
+                    <label>
+                        Size
+                    </label>
+
+
+                    <div class="size-buttons">
+
+                        <button
+                            type="button"
+                            data-size="Small"
+                            data-multiplier="0.5"
+                            onclick="selectSize(this)">
+
+                            Small (½ kg)
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            data-size="Medium"
+                            data-multiplier="1"
+                            class="selected"
+                            onclick="selectSize(this)">
+
+                            Medium (1 kg)
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            data-size="Large"
+                            data-multiplier="2"
+                            onclick="selectSize(this)">
+
+                            Large (2 kg)
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="quantity-section">
+
+                    <label>
+                        Quantity
+                    </label>
+
+
+                    <div class="quantity-control">
+
+                        <button
+                            onclick="changeModalQuantity(-1)">
+                            −
+                        </button>
+
+                        <span id="modalQuantity">
+                            1
+                        </span>
+
+                        <button
+                            onclick="changeModalQuantity(1)">
+                            +
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="add-cart-large"
+                    onclick="addModalProductToCart()">
+
+                    🛒 Add to Cart
+
+                </button>
+
+
+                <p
+                    class="added-message"
+                    id="addedMessage">
+
+                    ✓ Item added to cart!
+
+                </p>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     CART MODAL
+===================================================== -->
+
+<div
+    class="modal-overlay"
+    id="cartOverlay">
+
+
+    <div class="cart-modal">
+
+
+        <button
+            class="modal-close"
+            onclick="closeCart()">
+
+            ×
+
+        </button>
+
+
+        <h2>Your Cart</h2>
+
+        <p
+            class="cart-item-count"
+            id="cartItemCount">
+            0 items
+        </p>
+
+
+        <div
+            id="cartItems"
+            class="cart-items">
+
+            <!-- Cart generated by JS -->
+
+        </div>
+
+
+        <div class="cart-summary">
+
+
+            <div>
+
+                <span>Subtotal</span>
+
+                <strong id="cartSubtotal">
+                    ₹0
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>Delivery Charge</span>
+
+                <strong id="deliveryCharge">
+                    ₹0
+                </strong>
+
+            </div>
+
+
+            <div class="cart-total">
+
+                <span>Total</span>
+
+                <strong id="cartTotal">
+                    ₹0
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+        <button
+            class="checkout-button"
+            onclick="openCheckout()">
+
+            Proceed to Checkout →
+
+        </button>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     CHECKOUT MODAL
+===================================================== -->
+
+<div
+    class="modal-overlay"
+    id="checkoutOverlay">
+
+
+    <div class="checkout-modal">
+
+
+        <button
+            class="modal-close"
+            onclick="closeCheckout()">
+
+            ×
+
+        </button>
+
+
+        <h2>Confirm Order</h2>
+
+
+        <p class="checkout-subtitle">
+            Enter your delivery details
+        </p>
+
+
+        <form id="checkoutForm">
+
+
+            <div class="form-group">
+
+                <label for="customerName">
+                    Full Name *
+                </label>
+
+                <input
+                    type="text"
+                    id="customerName"
+                    placeholder="Enter your name"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="customerPhone">
+                    Phone Number *
+                </label>
+
+                <input
+                    type="tel"
+                    id="customerPhone"
+                    placeholder="10 digit mobile number"
+                    maxlength="10"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="customerAddress">
+                    Delivery Address *
+                </label>
+
+                <textarea
+                    id="customerAddress"
+                    placeholder="Enter complete delivery address"
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="customerPincode">
+                    Pincode *
+                </label>
+
+                <input
+                    type="text"
+                    id="customerPincode"
+                    placeholder="394210"
+                    maxlength="6"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Order Type
+                </label>
+
+
+                <div class="radio-group">
+
+                    <label>
+
+                        <input
+                            type="radio"
+                            name="orderType"
+                            value="Home Delivery"
+                            checked
+                        >
+
+                        Home Delivery
+
+                    </label>
+
+
+                    <label>
+
+                        <input
+                            type="radio"
+                            name="orderType"
+                            value="Pick Up"
+                        >
+
+                        Pick Up
+
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Payment Method
+                </label>
+
+
+                <div class="radio-group">
+
+                    <label>
+
+                        <input
+                            type="radio"
+                            name="paymentMethod"
+                            value="Cash on Delivery"
+                            checked
+                        >
+
+                        Cash on Delivery
+
+                    </label>
+
+
+                    <label>
+
+                        <input
+                            type="radio"
+                            name="paymentMethod"
+                            value="UPI / Online Payment"
+                        >
+
+                        UPI / Online Payment
+
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="checkout-button">
+
+                Continue to Order Review →
+
+            </button>
+
+
+        </form>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     ORDER REVIEW MODAL
+===================================================== -->
+
+<div
+    class="modal-overlay"
+    id="reviewOverlay">
+
+
+    <div class="review-modal">
+
+
+        <button
+            class="modal-close"
+            onclick="closeReview()">
+
+            ×
+
+        </button>
+
+
+        <h2>Review & Place Order</h2>
+
+
+        <div
+            id="reviewCustomer"
+            class="review-customer">
+        </div>
+
+
+        <div
+            id="reviewItems"
+            class="review-items">
+        </div>
+
+
+        <div class="review-total">
+
+            <span>
+                Total Amount
+            </span>
+
+            <strong id="reviewTotal">
+                ₹0
+            </strong>
+
+        </div>
+
+
+        <button
+            class="place-order-button"
+            onclick="placeOrder()">
+
+            🔒 Place Order
+
+        </button>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     ORDER CONFIRMED
+===================================================== -->
+
+<div
+    class="modal-overlay"
+    id="successOverlay">
+
+
+    <div class="success-modal">
+
+
+        <div class="success-icon">
+            ✓
+        </div>
+
+
+        <h2>
+            Order Placed Successfully!
+        </h2>
+
+
+        <p>
+            Thank you for choosing
+        </p>
+
+
+        <strong>
+            SHEETAL BAKERY & LIVE CAKE SHOP
+        </strong>
+
+
+        <div class="order-id-box">
+
+            <span>
+                Order ID
+            </span>
+
+            <strong id="orderId">
+                SB000000
+            </strong>
+
+        </div>
+
+
+        <button
+            class="whatsapp-button"
+            onclick="openOrderWhatsApp()">
+
+            💬 Track on WhatsApp
+
+        </button>
+
+
+        <button
+            class="home-button"
+            onclick="closeSuccess()">
+
+            🏠 Back to Home
+
+        </button>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="footer">
+
+
+    <div class="footer-item">
+
+        🚚
+
+        <div>
+
+            <strong>
+                Fast & Fresh Delivery
+            </strong>
+
+            <span>
+                At Your Doorstep
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-item">
+
+        🛡️
+
+        <div>
+
+            <strong>
+                Secure & Easy
+            </strong>
+            <span>
+
+Payment Options
+
+</span>
+
+</div>
+
+</div>
+
+<div class="footer-item">
+
+<div>
+
+<strong>
+
+Order on WhatsApp
+
+</strong>
+
+<span>
+
+Quick & Simple
+
+</span>
+
+</div>
+
+</div>
+
+<div class="footer-item">
+   ❤️
+<div>
+    <strong>
+
+Freshly Made
+
+</strong>
+
+<span>
+
+With Love
+
+</span>
+
+</div>
+
+</div>
+
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
