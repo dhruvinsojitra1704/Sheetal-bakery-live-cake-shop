@@ -82,6 +82,26 @@
 
 
         <!-- HEADER ACTIONS -->
+         <nav class="nav-links" id="nav-links">
+
+    <button
+        type="button"
+        class="mobile-close-btn"
+        onclick="toggleMenu()"
+        aria-label="Close Menu">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <a href="#home">Home</a>
+    <a href="#products">Products</a>
+    <a href="#custom-cake">Custom Cake</a>
+    <a href="#reviews">Reviews</a>
+    <a href="#policy">Policy</a>
+    
+
+
+
+</nav>
 
         <div class="header-actions">
 
@@ -464,6 +484,32 @@
 
 
         </div>
+        <div class="form-group">
+    <label for="cake-photo">
+        Favourite Cake Photo
+    </label>
+
+    <div class="cake-upload-box">
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+
+        <h4>Upload Cake Photo</h4>
+
+        <p>Share your favourite cake design with us</p>
+
+        <input
+            type="file"
+            id="cake-photo"
+            accept="image/*"
+        >
+
+        <label for="cake-photo" class="upload-photo-btn">
+            <i class="fa-solid fa-image"></i>
+            Choose Photo
+        </label>
+
+        <div id="cake-photo-preview" class="cake-photo-preview"></div>
+    </div>
+</div>
 
 
         <div class="form-group">
@@ -1082,6 +1128,65 @@
 
 </div>
 
+<!-- GOOGLE REVIEWS -->
+<section class="reviews-section" id="reviews">
+    <div class="section-container">
+
+        <div class="section-heading">
+            <span>WHAT OUR CUSTOMERS SAY</span>
+            <h2>Customer Reviews</h2>
+            <p>See our customer feedback on Google</p>
+        </div>
+
+        <div class="reviews-card">
+
+            <div class="google-review-icon">
+                <i class="fa-brands fa-google"></i>
+            </div>
+
+            <div class="reviews-stars">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+            </div>
+
+            <h3>Review SHEETAL BAKERY &amp; LIVE CAKE SHOP</h3>
+
+            <p>
+                Visit our Google profile to see customer reviews
+                and share your own experience with us.
+            </p>
+
+            <div class="reviews-buttons">
+
+                <a
+                    href="https://maps.app.goo.gl/myKn36fq3SijcxV27"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="google-review-btn">
+
+                    <i class="fa-brands fa-google"></i>
+                    Read Google Reviews
+                </a>
+
+                <a
+                    href="https://maps.app.goo.gl/myKn36fq3SijcxV27"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="google-write-btn">
+
+                    <i class="fa-solid fa-pen"></i>
+                    Write a Review
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
 
 
 <!-- =====================================================

@@ -1990,3 +1990,43 @@ async function startRazorpayPayment() {
         );
     }
 }
+/* =========================
+   CAKE PHOTO PREVIEW
+========================= */
+
+const cakePhotoInput = document.getElementById("cake-photo");
+const cakePhotoPreview = document.getElementById("cake-photo-preview");
+
+if (cakePhotoInput) {
+
+    cakePhotoInput.addEventListener("change", function () {
+
+        const file = this.files[0];
+
+        if (!file) {
+            cakePhotoPreview.innerHTML = "";
+            return;
+        }
+
+        if (!file.type.startsWith("image/")) {
+            alert("Please select an image file.");
+            this.value = "";
+            cakePhotoPreview.innerHTML = "";
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+
+            cakePhotoPreview.innerHTML = `
+                <img
+                    src="${event.target.result}"
+                    alt="Selected Cake Photo"
+                >
+            `;
+        };
+
+        reader.readAsDataURL(file);
+    });
+}
