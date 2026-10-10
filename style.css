@@ -2122,3 +2122,167 @@ img {
     }
 
 }
+/* =====================================================
+   RETURN & REPLACEMENT POLICY
+   ===================================================== */
+
+.return-policy {
+    padding: 80px 20px;
+    background: #f8f5f2;
+}
+
+.return-policy-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.return-policy-title {
+    text-align: center;
+    max-width: 750px;
+    margin: 0 auto 45px;
+}
+
+.return-policy-title span {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    color: #8b5e4b;
+}
+
+.return-policy-title h2 {
+    margin: 0 0 15px;
+    font-size: 38px;
+    color: #2b211d;
+}
+
+.return-policy-title p {
+    margin: 0;
+    color: #666;
+    line-height: 1.7;
+    font-size: 16px;
+}
+
+.policy-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+}
+
+.policy-card {
+    background: #ffffff;
+    padding: 28px 24px;
+    border-radius: 16px;
+    border: 1px solid #eee5df;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.policy-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.09);
+}
+
+.policy-icon {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.policy-card h3 {
+    margin: 0 0 10px;
+    color: #2b211d;
+    font-size: 19px;
+}
+
+.policy-card p {
+    margin: 0;
+    color: #666;
+    line-height: 1.7;
+    font-size: 14px;
+}
+
+.policy-note {
+    margin-top: 30px;
+    padding: 20px 22px;
+    background: #fff8ed;
+    border-left: 4px solid #8b5e4b;
+    border-radius: 10px;
+    color: #555;
+    line-height: 1.7;
+    font-size: 14px;
+}
+
+.policy-note strong {
+    color: #2b211d;
+}
+
+.policy-contact {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.policy-contact h3 {
+    margin-bottom: 8px;
+    color: #2b211d;
+}
+
+.policy-contact p {
+    margin: 0;
+    color: #666;
+    line-height: 1.6;
+}
+
+
+/* =====================================================
+   MOBILE RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 900px) {
+
+    .policy-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .return-policy-title h2 {
+        font-size: 32px;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .return-policy {
+        padding: 55px 15px;
+    }
+
+    .return-policy-title {
+        margin-bottom: 30px;
+    }
+
+    .return-policy-title h2 {
+        font-size: 27px;
+    }
+
+    .return-policy-title p {
+        font-size: 14px;
+    }
+
+    .policy-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .policy-card {
+        padding: 22px 20px;
+    }
+
+    .policy-card h3 {
+        font-size: 18px;
+    }
+
+    .policy-note {
+        font-size: 13px;
+        padding: 16px;
+    }
+}

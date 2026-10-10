@@ -22,7 +22,7 @@ const products = [
         name: "Chocolate Cake",
         category: "Cakes",
         price: 450,
-        image: "images/chocolate-cake.jpg",
+        image: "",
         description:
             "Rich chocolate cake with fresh cream and chocolate decoration."
     },
@@ -32,7 +32,7 @@ const products = [
         name: "Vanilla Cake",
         category: "Cakes",
         price: 400,
-        image: "images/vanilla-cake.jpg",
+        image: "",
         description:
             "Soft vanilla cake with fresh cream and colourful decoration."
     },
@@ -42,7 +42,7 @@ const products = [
         name: "Black Forest Cake",
         category: "Cakes",
         price: 500,
-        image: "images/black-forest-cake.jpg",
+        image: "",
         description:
             "Classic black forest cake with chocolate and cherries."
     },
@@ -52,7 +52,7 @@ const products = [
         name: "Red Velvet Cake",
         category: "Cakes",
         price: 550,
-        image: "images/red-velvet-cake.jpg",
+        image: "",
         description:
             "Soft red velvet cake with creamy frosting."
     },
@@ -63,7 +63,7 @@ const products = [
         name: "Fresh Bread",
         category: "Bakery",
         price: 40,
-        image: "images/bread.jpg",
+        image: "",
         description:
             "Fresh and soft bakery bread."
     },
@@ -73,7 +73,7 @@ const products = [
         name: "Butter Biscuits",
         category: "Bakery",
         price: 80,
-        image: "images/biscuits.jpg",
+        image: "",
         description:
             "Crispy and delicious butter biscuits."
     },
@@ -84,7 +84,7 @@ const products = [
         name: "Potato Chips",
         category: "Snacks",
         price: 50,
-        image: "images/chips.jpg",
+        image: "",
         description:
             "Crispy potato chips for your snack time."
     },
@@ -95,7 +95,7 @@ const products = [
         name: "Pepsi 330 ml",
         category: "Cold Drinks",
         price: 40,
-        image: "images/pepsi.jpg",
+        image: "",
         description:
             "Chilled refreshing Pepsi can."
     },
@@ -105,7 +105,7 @@ const products = [
         name: "Fresh Juice",
         category: "Cold Drinks",
         price: 60,
-        image: "images/juice.jpg",
+        image: "",
         description:
             "Refreshing fruit juice."
     },
@@ -116,7 +116,7 @@ const products = [
         name: "Grocery Pack",
         category: "Grocery",
         price: 120,
-        image: "images/grocery.jpg",
+        image: "",
         description:
             "Useful grocery products for your daily needs."
     },
@@ -127,7 +127,7 @@ const products = [
         name: "Premium Dry Fruits",
         category: "Dry Fruits",
         price: 350,
-        image: "images/dry-fruits.jpg",
+        image: "",
         description:
             "Premium quality mixed dry fruits."
     },
@@ -138,7 +138,7 @@ const products = [
         name: "Chocolate Box",
         category: "Chocolates",
         price: 250,
-        image: "images/chocolates.jpg",
+        image: "",
         description:
             "Delicious assorted chocolate box."
     }
@@ -226,6 +226,22 @@ function loadCart() {
             cart = [];
 
         }
+
+
+        cart = cart.map(function (item) {
+
+            const product = products.find(function (entry) {
+
+                return entry.id === item.productId;
+
+            });
+
+            return product
+                ? { ...item, image: product.image }
+                : item;
+
+        });
+
 
     } catch (error) {
 
@@ -325,11 +341,12 @@ function createProductCard(product) {
                 class="product-image"
                 onclick="openProductModal(${product.id})">
 
-                <img
-                    src="${product.image}"
-                    alt="${escapeHtml(product.name)}"
-                    onerror="this.style.display='none'"
-                >
+                ${product.image
+                    ? `<img
+                        src="${product.image}"
+                        alt="${escapeHtml(product.name)}"
+                    >`
+                    : ""}
 
             </div>
 
@@ -568,9 +585,22 @@ function openProductModal(productId) {
     selectedMultiplier = 1;
 
 
-    document.getElementById(
-        "modalProductImage"
-    ).src = product.image;
+    const modalImage =
+        document.getElementById("modalProductImage");
+
+    if (product.image) {
+
+        modalImage.src = product.image;
+
+        modalImage.style.display = "";
+
+    } else {
+
+        modalImage.removeAttribute("src");
+
+        modalImage.style.display = "none";
+
+    }
 
 
     document.getElementById(
@@ -996,6 +1026,13 @@ function renderCartItems() {
     container.innerHTML =
         cart.map(function (item, index) {
 
+            const imageMarkup = item.image
+                ? `<img
+                    src="${item.image}"
+                    alt="${escapeHtml(item.name)}"
+                >`
+                : "";
+
             return `
 
                 <div class="cart-item">
@@ -1003,11 +1040,7 @@ function renderCartItems() {
 
                     <div class="cart-item-image">
 
-                        <img
-                            src="${item.image}"
-                            alt="${escapeHtml(item.name)}"
-                            onerror="this.style.display='none'"
-                        >
+                        ${imageMarkup}
 
                     </div>
 
