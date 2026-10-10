@@ -1461,6 +1461,44 @@ function placeOrder() {
 }
 
 
+function createWhatsAppOrderMessage(orderId, subtotal, delivery, total) {
+
+    let orderText =
+        "🧁 SHEETAL BAKERY & LIVE CAKE SHOP\n\n" +
+        "📦 NEW ORDER\n" +
+        "━━━━━━━━━━━━━━━━━━\n\n" +
+        `Order ID: ${orderId}\n` +
+        `👤 Name: ${customerData.name}\n` +
+        `📱 Phone: ${customerData.phone}\n` +
+        `📍 Address: ${customerData.address}\n` +
+        `Pincode: ${customerData.pincode}\n` +
+        `Order Type: ${customerData.orderType}\n` +
+        `Payment: ${customerData.paymentMethod}\n\n` +
+        "🛒 ORDER ITEMS\n" +
+        "━━━━━━━━━━━━━━━━━━\n";
+
+    cart.forEach(function (item, index) {
+
+        orderText +=
+            `${index + 1}. ${item.name} (${item.size})\n` +
+            `   Qty: ${item.quantity}\n` +
+            `   Price: ₹${item.unitPrice * item.quantity}\n\n`;
+
+    });
+
+    orderText +=
+        "━━━━━━━━━━━━━━━━━━\n" +
+        `Subtotal: ₹${subtotal}\n` +
+        `Delivery: ₹${delivery}\n` +
+        `TOTAL: ₹${total}\n\n` +
+        "Please confirm my order.\n" +
+        "Thank you! ❤️";
+
+    return orderText;
+
+}
+
+
 
 /* =====================================================
    WHATSAPP ORDER MESSAGE
