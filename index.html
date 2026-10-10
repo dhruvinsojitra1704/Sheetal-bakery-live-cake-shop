@@ -1000,13 +1000,13 @@
         </div>
 
 
-        <button
-            class="place-order-button"
-            onclick="placeOrder()">
+     <button type="button" class="place-order-btn" onclick="confirmPlaceOrder()">
+    🔒 Place Order
+</button>
 
-            🔒 Place Order
-
-        </button>
+<button type="button" class="payment-btn" onclick="startRazorpayPayment()">
+    💳 Pay Online / UPI
+</button>
 
 
     </div>
@@ -1170,11 +1170,6 @@ With Love
 
 </footer>
 
-<script src="script.js"></script>
-
-</body>
-
-</html>
 <!-- ================= RETURN POLICY ================= -->
 
 <section class="return-policy" id="return-policy">
@@ -1266,3 +1261,10 @@ With Love
 </section>
 
 <!-- ================= END RETURN POLICY ================= -->
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="script.js"></script>
+
+</body>
+
+</html>

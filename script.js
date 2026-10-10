@@ -1423,6 +1423,13 @@ function closeReview() {
    PLACE ORDER
 ===================================================== */
 
+function confirmPlaceOrder() {
+
+    placeOrder();
+
+}
+
+
 function placeOrder() {
 
     if (!customerData) {
@@ -1567,11 +1574,11 @@ function sendOrderToWhatsApp() {
     cart.forEach((item, index) => {
         orderText += `${index + 1}. ${item.name}\n`;
         orderText += `   Qty: ${item.quantity}\n`;
-        orderText += `   Price: ₹${item.price * item.quantity}\n\n`;
+        orderText += `   Price: ₹${item.unitPrice * item.quantity}\n\n`;
     });
 
     const subtotal = cart.reduce(
-        (total, item) => total + item.price * item.quantity,
+        (total, item) => total + item.unitPrice * item.quantity,
         0
     );
 
@@ -1827,3 +1834,159 @@ document.addEventListener(
 
     }
 );
+async function startRazorpayPayment() {
+
+    if (typeof cart === "undefined" || cart.length === 0) {
+        alert("Your cart is empty.");
+        return;
+    }
+
+    const name =
+        document.getElementById("customerName")?.value.trim();
+
+    const phone =
+        document.getElementById("customerPhone")?.value.trim();
+
+    const address =
+        document.getElementById("customerAddress")?.value.trim();
+
+    if (!name || !phone || !address) {
+        alert("Please fill Customer Name, Mobile Number and Address.");
+        return;
+    }
+
+    const total = getTotal();
+
+    if (total <= 0) {
+        alert("Invalid order amount.");
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            "http://localhost:5000/create-order",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    amount: total * 100
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.success) {
+            alert("Unable to create payment order.");
+            return;
+        }
+
+        const options = {
+
+            key: "rzp_test_TmBmm0ABWHZ4UD",
+
+            amount: data.order.amount,
+
+            currency: "INR",
+
+            name: "SHEETAL BAKERY & LIVE CAKE SHOP",
+
+            description: "Bakery Order Payment",
+
+            order_id: data.order.id,
+
+            prefill: {
+                name: name,
+                contact: phone
+            },
+
+            theme: {
+                color: "#8b5e4b"
+            },
+
+            handler: async function (paymentResponse) {
+
+                try {
+
+                    const verifyResponse = await fetch(
+                        "http://localhost:5000/verify-payment",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                razorpay_order_id:
+                                    paymentResponse.razorpay_order_id,
+                                razorpay_payment_id:
+                                    paymentResponse.razorpay_payment_id,
+                                razorpay_signature:
+                                    paymentResponse.razorpay_signature
+                            })
+                        }
+                    );
+
+                    const result = await verifyResponse.json();
+
+                    if (result && result.success) {
+
+                        alert(
+                            "✅ Payment Successful!\n\n" +
+                            "Payment ID: " +
+                            paymentResponse.razorpay_payment_id +
+                            "\n\nYour order has been confirmed."
+                        );
+
+                        console.log("Payment Verified:", result);
+
+                    } else {
+
+                        alert(
+                            "❌ Payment verification failed.\n\n" +
+                            "Please contact SHEETAL BAKERY."
+                        );
+
+                        console.error("Verification failed:", result);
+                    }
+
+                } catch (error) {
+
+                    console.error("Verification Error:", error);
+
+                    alert(
+                        "Payment was completed, but verification could not be completed.\n" +
+                        "Please contact the shop before making another payment."
+                    );
+                }
+            },
+
+            modal: {
+                ondismiss: function () {
+                    console.log("Payment window closed.");
+                }
+            }
+        };
+
+        if (!window.Razorpay) {
+            alert("Payment gateway is unavailable right now.");
+            return;
+        }
+
+        const razorpayCheckout =
+            new window.Razorpay(options);
+
+        razorpayCheckout.open();
+
+    } catch (error) {
+
+        console.error("Payment Error:", error);
+
+        alert(
+            "Payment system could not connect.\n" +
+            "Please try again."
+        );
+    }
+}
