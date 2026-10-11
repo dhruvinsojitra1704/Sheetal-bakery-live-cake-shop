@@ -97,7 +97,7 @@
     <a href="#custom-cake">Custom Cake</a>
     <a href="#reviews">Reviews</a>
     <a href="#policy">Policy</a>
-    
+   
 
 
 
@@ -468,11 +468,11 @@
 
                 <select id="customSize">
 
-                    <option>½ kg</option>
+                    <option>1 kg</option>
 
-                    <option selected>1 kg</option>
+                    <option selected>2 kg</option>
 
-                    <option>2 kg</option>
+                    <option>2.5 kg</option>
 
                     <option>3 kg</option>
 
@@ -484,31 +484,19 @@
 
 
         </div>
-        <div class="form-group">
-    <label for="cake-photo">
-        Favourite Cake Photo
+        <div class="custom-cake-photo">
+    <label for="cakePhoto">
+        📷 Favourite Cake Photo
     </label>
 
-    <div class="cake-upload-box">
-        <i class="fa-solid fa-cloud-arrow-up"></i>
+    <input
+        type="file"
+        id="cakePhoto"
+        accept="image/*"
+        onchange="previewCakePhoto(event)"
+    >
 
-        <h4>Upload Cake Photo</h4>
-
-        <p>Share your favourite cake design with us</p>
-
-        <input
-            type="file"
-            id="cake-photo"
-            accept="image/*"
-        >
-
-        <label for="cake-photo" class="upload-photo-btn">
-            <i class="fa-solid fa-image"></i>
-            Choose Photo
-        </label>
-
-        <div id="cake-photo-preview" class="cake-photo-preview"></div>
-    </div>
+    <div id="cakePhotoPreview"></div>
 </div>
 
 

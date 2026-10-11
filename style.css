@@ -2299,3 +2299,50 @@ img {
 
     box-shadow: 0 8px 20px rgba(0,0,0,0.10);
 }
+
+.custom-cake-photo {
+    margin-top: 15px;
+}
+
+.custom-cake-photo label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.custom-cake-photo input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+}
+
+.cake-photo-preview-box {
+    margin-top: 15px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.cake-photo-preview {
+    width: 180px;
+    max-width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.cake-photo-preview-box p {
+    margin: 8px 0;
+    font-size: 14px;
+}
+
+.cake-photo-preview-box button {
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+}
