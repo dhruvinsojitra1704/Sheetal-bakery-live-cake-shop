@@ -2106,6 +2106,18 @@ function removeCakePhoto() {
 
     selectedCakePhoto = null;
 }
+document.addEventListener("DOMContentLoaded", function () {
+    const dateInput = document.getElementById("cakeDate");
+
+    if (dateInput) {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const day = String(today.getDate()).padStart(2, "0");
+
+        dateInput.min = `${year}-${month}-${day}`;
+    }
+});
 
 
 // ==========================================
@@ -2233,4 +2245,119 @@ Please contact me regarding my custom cake order.`;
         encodeURIComponent(message);
 
     window.open(whatsappURL, "_blank");
+}
+
+// ==========================================
+// CUSTOM PHOTO CAKE LOGIC
+// ==========================================
+
+function handleCakeTypeChange() {
+    const cakeType = document.getElementById("cakeType");
+    const board = document.getElementById("customPhotoCakeBoard");
+    const customerPhoto = document.getElementById("customerPhoto");
+
+    if (!cakeType || !board) return;
+
+    if (cakeType.value === "Custom Photo Cake") {
+
+        // Show photo upload board
+        board.style.display = "block";
+
+        // Customer photo is compulsory
+        if (customerPhoto) {
+            customerPhoto.required = true;
+        }
+
+    } else {
+
+        // Hide photo upload board
+        board.style.display = "none";
+
+        // Customer photo is not required
+        if (customerPhoto) {
+            customerPhoto.required = false;
+            customerPhoto.value = "";
+        }
+    }
+}
+
+
+// ==========================================
+// CUSTOMER PHOTO PREVIEW
+// ==========================================
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const customerPhoto = document.getElementById("customerPhoto");
+    const preview = document.getElementById("customerPhotoPreview");
+
+    if (!customerPhoto || !preview) return;
+
+    customerPhoto.addEventListener("change", function () {
+
+        const file = this.files[0];
+
+        if (!file) {
+            preview.innerHTML = "";
+            return;
+        }
+
+        // Check image
+        if (!file.type.startsWith("image/")) {
+            alert("Please upload an image file.");
+            this.value = "";
+            preview.innerHTML = "";
+            return;
+        }
+
+        // Maximum 5 MB
+        if (file.size > 5 * 1024 * 1024) {
+            alert("Photo size should be less than 5 MB.");
+            this.value = "";
+            preview.innerHTML = "";
+            return;
+        }
+
+        const imageURL = URL.createObjectURL(file);
+
+        preview.innerHTML = `
+            <div class="cake-photo-preview-box">
+                <img
+                    src="${imageURL}"
+                    alt="Your Photo"
+                    class="cake-photo-preview"
+                >
+
+                <p>📷 ${file.name}</p>
+
+                <button
+                    type="button"
+                    onclick="removeCustomerPhoto()">
+                    ❌ Remove Photo
+                </button>
+            </div>
+        `;
+    });
+});
+
+
+// ==========================================
+// REMOVE CUSTOMER PHOTO
+// ==========================================
+
+function removeCustomerPhoto() {
+
+    const customerPhoto =
+        document.getElementById("customerPhoto");
+
+    const preview =
+        document.getElementById("customerPhotoPreview");
+
+    if (customerPhoto) {
+        customerPhoto.value = "";
+    }
+
+    if (preview) {
+        preview.innerHTML = "";
+    }
 }

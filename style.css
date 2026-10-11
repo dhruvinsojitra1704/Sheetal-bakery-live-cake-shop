@@ -2346,3 +2346,908 @@ img {
     border-radius: 8px;
     cursor: pointer;
 }
+/* ==========================================
+   CUSTOM CAKE SPECIAL BOARD
+========================================== */
+
+.custom-cake-special-board {
+    width: 100%;
+    margin: 25px 0;
+    padding: 22px;
+    border-radius: 22px;
+    background:
+        linear-gradient(135deg, #fff8f2, #ffffff);
+    border: 1px solid #ead7ca;
+    box-shadow:
+        0 12px 35px rgba(80, 45, 30, 0.12);
+    position: relative;
+    overflow: hidden;
+}
+
+
+/* Decorative circles */
+
+.custom-cake-special-board::before {
+    content: "";
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: rgba(218, 165, 135, 0.12);
+    top: -70px;
+    right: -50px;
+}
+
+.custom-cake-special-board::after {
+    content: "";
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(245, 200, 160, 0.12);
+    bottom: -50px;
+    left: -40px;
+}
+
+
+/* Header */
+
+.board-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 22px;
+    position: relative;
+    z-index: 2;
+}
+
+.board-icon {
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #8b5e4b;
+    color: white;
+    border-radius: 16px;
+    font-size: 28px;
+    box-shadow: 0 7px 18px rgba(80, 45, 30, 0.2);
+}
+
+.board-header h3 {
+    margin: 0;
+    font-size: 21px;
+    color: #4b2e22;
+}
+
+.board-header p {
+    margin: 5px 0 0;
+    color: #806b61;
+    font-size: 13px;
+}
+
+
+/* Two cards */
+
+.board-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    position: relative;
+    z-index: 2;
+}
+
+
+/* Option cards */
+
+.cake-option-card {
+    padding: 18px;
+    border-radius: 17px;
+    background: #ffffff;
+    border: 1px solid #eadfd8;
+    display: flex;
+    gap: 14px;
+    transition: 0.25s ease;
+}
+
+.cake-option-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(70, 40, 25, 0.10);
+    border-color: #c9a28e;
+}
+
+
+/* Icons */
+
+.option-icon {
+    min-width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+    background: #f7ebe4;
+}
+
+
+/* Content */
+
+.option-content {
+    width: 100%;
+}
+
+.option-content label:first-child {
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    color: #4b2e22;
+}
+
+.option-content p {
+    margin: 5px 0 12px;
+    color: #8a7770;
+    font-size: 12px;
+}
+
+
+/* Date input */
+
+#cakeDate {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #dccbc1;
+    border-radius: 10px;
+    background: #fffaf7;
+    color: #4b2e22;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+}
+
+#cakeDate:focus {
+    border-color: #8b5e4b;
+    box-shadow: 0 0 0 3px rgba(139, 94, 75, 0.10);
+}
+
+
+/* Upload button */
+
+.photo-upload-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 10px;
+    background: #8b5e4b;
+    color: white !important;
+    font-size: 13px !important;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.photo-upload-button:hover {
+    background: #704735;
+    transform: translateY(-1px);
+}
+
+
+/* Photo preview */
+
+#cakePhotoPreview {
+    margin-top: 12px;
+}
+
+.cake-photo-preview-box {
+    padding: 10px;
+    border-radius: 12px;
+    background: #fff8f4;
+    border: 1px dashed #c9a28e;
+    text-align: center;
+}
+
+.cake-photo-preview {
+    width: 100%;
+    max-width: 180px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+    margin: auto;
+}
+
+.cake-photo-preview-box p {
+    margin: 7px 0;
+    font-size: 11px;
+    color: #6d5a51;
+}
+
+.cake-photo-preview-box button {
+    border: none;
+    background: #f3dfd6;
+    color: #6b3f2d;
+    padding: 7px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+
+/* Mobile */
+
+@media (max-width: 700px) {
+
+    .custom-cake-special-board {
+        padding: 16px;
+        border-radius: 18px;
+    }
+
+    .board-options {
+        grid-template-columns: 1fr;
+    }
+
+    .board-header h3 {
+        font-size: 18px;
+    }
+
+    .board-header p {
+        font-size: 11px;
+    }
+
+    .cake-option-card {
+        padding: 15px;
+    }
+}
+/* =========================================
+   UNIQUE BAKERY NAVIGATION
+========================================= */
+
+.main-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.97);
+    border-bottom: 1px solid #eadbd3;
+    box-shadow: 0 3px 12px rgba(60, 35, 25, 0.08);
+    position: relative;
+    z-index: 100;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+}
+
+.main-navigation::-webkit-scrollbar {
+    height: 4px;
+}
+
+.main-navigation::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.main-navigation::-webkit-scrollbar-thumb {
+    background: #c9a28e;
+    border-radius: 10px;
+}
+
+.nav-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    flex: 0 0 auto;
+    min-width: auto;
+    padding: 8px 14px;
+    border-radius: 25px;
+    background: #fff8f4;
+    border: 1px solid #e4cec2;
+    color: #5b392b;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease,
+        color 0.25s ease;
+}
+
+.nav-btn:hover {
+    transform: translateY(-3px);
+    background: #8b5e4b;
+    color: #ffffff;
+    border-color: #8b5e4b;
+    box-shadow: 0 8px 20px rgba(91, 57, 43, 0.22);
+}
+
+.nav-btn:active {
+    transform: translateY(0);
+}
+
+.nav-btn.active {
+    background: #8b5e4b;
+    color: white;
+    border-color: #8b5e4b;
+}
+
+.nav-btn::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 4px;
+    width: 0;
+    height: 2px;
+    background: white;
+    border-radius: 10px;
+    transform: translateX(-50%);
+    transition: width 0.25s ease;
+}
+
+.nav-btn:hover::after {
+    width: 35%;
+}
+
+.main-navigation .nav-icon {
+    font-size: 11px;
+    line-height: 1;
+}
+
+.nav-btn[href="#custom-cake"],
+.nav-btn[href="custom-cake"] {
+    background: linear-gradient(135deg, #fff1e9, #f8dfd2);
+    border-color: #d9b09b;
+}
+
+.nav-btn[href="#policy"],
+.nav-btn[href="policy.html"] {
+    background: linear-gradient(135deg, #fff7ef, #f7e5d9);
+    border-color: #d7b6a3;
+}
+
+.nav-btn[href="Cake-Catalog.pdf"],
+.nav-btn[href="#cake-catalog"] {
+    background: linear-gradient(135deg, #fff1e8, #f7d9c8);
+    border-color: #d8b19c;
+}
+
+.nav-btn[href="#custom-cake"]:hover,
+.nav-btn[href="custom-cake"]:hover,
+.nav-btn[href="#policy"]:hover,
+.nav-btn[href="policy.html"]:hover,
+.nav-btn[href="Cake-Catalog.pdf"]:hover,
+.nav-btn[href="#cake-catalog"]:hover {
+    background: linear-gradient(135deg, #8b5e4b, #6f4535);
+    color: white;
+}
+
+@media (max-width: 700px) {
+    .main-navigation {
+        justify-content: flex-start;
+        padding: 7px 10px;
+        gap: 7px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+
+    .main-navigation .nav-btn {
+        padding: 7px 12px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 450px) {
+    .main-navigation {
+        justify-content: flex-start;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+    }
+
+    .nav-btn {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+}
+/* =========================================
+   POLICY PAGE
+========================================= */
+
+.policy-page {
+    min-height: 100vh;
+
+    padding: 70px 20px;
+
+    background:
+        radial-gradient(
+            circle at top left,
+            #fff4ed,
+            transparent 35%
+        ),
+        linear-gradient(
+            135deg,
+            #fffaf7,
+            #f9eee8
+        );
+
+    color: #4b3328;
+}
+
+
+.policy-wrapper {
+    max-width: 1150px;
+    margin: auto;
+}
+
+
+/* Header */
+
+.policy-header {
+    text-align: center;
+    margin-bottom: 45px;
+}
+
+
+.policy-icon {
+    width: 65px;
+    height: 65px;
+
+    margin: 0 auto 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 20px;
+
+    background: #8b5e4b;
+
+    font-size: 28px;
+
+    box-shadow:
+        0 10px 25px rgba(91, 57, 43, 0.2);
+}
+
+
+.policy-label {
+    margin: 0 0 8px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    letter-spacing: 3px;
+
+    color: #a06f58;
+}
+
+
+.policy-header h1 {
+    margin: 0 0 18px;
+
+    font-size: 38px;
+
+    color: #5b392b;
+}
+
+
+.policy-intro {
+    max-width: 720px;
+
+    margin: auto;
+
+    line-height: 1.8;
+
+    font-size: 16px;
+
+    color: #765b4e;
+}
+
+
+/* Policy Cards */
+
+.policy-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 22px;
+}
+
+
+.policy-card {
+    padding: 28px;
+
+    background: rgba(255, 255, 255, 0.9);
+
+    border: 1px solid #ead7cc;
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 8px 25px rgba(91, 57, 43, 0.08);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+.policy-card:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 15px 35px rgba(91, 57, 43, 0.14);
+}
+
+
+.policy-card-icon {
+    font-size: 28px;
+
+    margin-bottom: 12px;
+}
+
+
+.policy-card h2 {
+    margin: 0 0 12px;
+
+    font-size: 21px;
+
+    color: #5b392b;
+}
+
+
+.policy-card p {
+    margin: 0;
+
+    line-height: 1.75;
+
+    font-size: 15px;
+
+    color: #765b4e;
+}
+
+
+/* Important Card */
+
+.important-policy {
+    border: 1px solid #d9b39f;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff8f3,
+            #f9e9df
+        );
+}
+
+
+/* Need Help */
+
+.policy-help {
+    margin-top: 28px;
+
+    padding: 35px;
+
+    text-align: center;
+
+    border-radius: 25px;
+
+    background: #5b392b;
+
+    color: white;
+
+    box-shadow:
+        0 15px 35px rgba(91, 57, 43, 0.2);
+}
+
+
+.help-icon {
+    font-size: 30px;
+
+    margin-bottom: 8px;
+}
+
+
+.policy-help h2 {
+    margin: 0 0 12px;
+
+    font-size: 25px;
+}
+
+
+.policy-help p {
+    max-width: 700px;
+
+    margin: auto;
+
+    line-height: 1.7;
+
+    color: #f8ebe4;
+}
+
+
+/* Back Home Button */
+
+.policy-actions {
+    margin-top: 22px;
+}
+
+
+.policy-home-btn {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 11px 20px;
+
+    border-radius: 25px;
+
+    background: white;
+
+    color: #5b392b;
+
+    text-decoration: none;
+
+    font-weight: 700;
+
+    transition: 0.25s ease;
+}
+
+
+.policy-home-btn:hover {
+    transform: translateY(-3px);
+
+    background: #f8e4d8;
+}
+
+
+/* Mobile */
+
+@media (max-width: 700px) {
+
+    .policy-page {
+        padding: 45px 15px;
+    }
+
+    .policy-header h1 {
+        font-size: 29px;
+    }
+
+    .policy-intro {
+        font-size: 14px;
+    }
+
+    .policy-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .policy-card {
+        padding: 22px;
+    }
+
+    .policy-help {
+        padding: 28px 20px;
+    }
+
+}
+
+/* ==========================================
+   CUSTOM PHOTO CAKE - PREMIUM UNIQUE DESIGN
+   ========================================== */
+
+.photo-cake-board {
+    margin-top: 18px;
+    padding: 20px;
+    border-radius: 22px;
+    background: linear-gradient(135deg, #fff7f2, #fff0e8);
+    border: 2px solid #f0c8b5;
+    box-shadow: 0 10px 30px rgba(185, 87, 58, 0.12);
+    animation: photoCakeBoardIn 0.35s ease;
+}
+
+@keyframes photoCakeBoardIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Header */
+
+.photo-cake-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 21px;
+    font-weight: 700;
+    color: #b9573a;
+    margin-bottom: 6px;
+}
+
+.photo-cake-title::before {
+    content: "🎂";
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 5px 15px rgba(185, 87, 58, 0.15);
+}
+
+.photo-cake-info {
+    margin: 0 0 18px;
+    color: #6f625c;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+/* Upload Cards */
+
+.photo-upload-box {
+    position: relative;
+    padding: 18px;
+    margin-top: 14px;
+    border-radius: 18px;
+    background: #ffffff;
+    border: 1.5px solid #eaded7;
+    transition: 0.3s ease;
+}
+
+.photo-upload-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.07);
+}
+
+
+/* Required Photo */
+
+.required-photo {
+    border: 2px solid #d97757;
+    background: linear-gradient(135deg, #fffaf7, #fff);
+}
+
+.required-photo::after {
+    content: "REQUIRED";
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 5px 9px;
+    border-radius: 20px;
+    background: #d97757;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+
+/* Labels */
+
+.photo-upload-box label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #252525;
+}
+
+.photo-upload-box label span {
+    color: #d97757;
+    font-size: 12px;
+}
+
+
+/* File Input */
+
+.photo-upload-box input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #eaded7;
+    border-radius: 12px;
+    background: #fff9f5;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.photo-upload-box input[type="file"]::file-selector-button {
+    border: none;
+    padding: 9px 14px;
+    margin-right: 10px;
+    border-radius: 10px;
+    background: #d97757;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.photo-upload-box small {
+    display: block;
+    margin-top: 8px;
+    color: #8a7b73;
+    font-size: 12px;
+}
+
+
+/* Photo Preview */
+
+.cake-photo-preview-box {
+    margin-top: 15px;
+    padding: 12px;
+    text-align: center;
+    border-radius: 15px;
+    background: #fff9f5;
+    border: 1px solid #eaded7;
+}
+
+.cake-photo-preview {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 14px;
+    border: 3px solid #ffffff;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
+}
+
+.cake-photo-preview-box p {
+    margin: 8px 0;
+    font-size: 12px;
+    color: #665a54;
+}
+
+.cake-photo-preview-box button {
+    border: none;
+    padding: 8px 14px;
+    border-radius: 10px;
+    background: #f3e2da;
+    color: #a44930;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    .photo-cake-board {
+        padding: 15px;
+        border-radius: 18px;
+    }
+
+    .photo-cake-title {
+        font-size: 18px;
+    }
+
+    .photo-upload-box {
+        padding: 15px;
+    }
+
+    .required-photo::after,
+    .optional-photo::after {
+        font-size: 9px;
+        padding: 4px 7px;
+    }
+
+    .cake-photo-preview {
+        width: 125px;
+        height: 125px;
+    }
+  }

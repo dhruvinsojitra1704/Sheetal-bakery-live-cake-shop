@@ -78,8 +78,39 @@
                 Custom Cake
             </a>
 
-        </nav>
 
+        </nav>
+<nav class="main-navigation">
+
+    <a href="#home" class="nav-btn">
+        🏠 <span>Home</span>
+    </a>
+
+    <a href="#products" class="nav-btn">
+        🛍️ <span>Products</span>
+    </a>
+
+    <a href="#custom-cake" class="nav-btn">
+        🎂 <span>Custom Cake</span>
+    </a>
+
+    <a href="#reviews" class="nav-btn">
+        ⭐ <span>Reviews</span>
+    </a>
+
+   <a href="Cake-Catalog.pdf"
+   class="nav-btn"
+   target="_blank"
+   rel="noopener">
+    <span class="nav-icon">🍰</span>
+    <span>Cake Catalog</span>
+   </a>
+
+  <a href="policy.html" class="nav-btn">
+     <span class="nav-icon">📋</span>
+     <span>Policy</span>
+  </a>
+</nav>
 
         <!-- HEADER ACTIONS -->
          <nav class="nav-links" id="nav-links">
@@ -92,11 +123,7 @@
         <i class="fa-solid fa-xmark"></i>
     </button>
 
-    <a href="#home">Home</a>
-    <a href="#products">Products</a>
-    <a href="#custom-cake">Custom Cake</a>
-    <a href="#reviews">Reviews</a>
-    <a href="#policy">Policy</a>
+ 
    
 
 
@@ -435,59 +462,114 @@
         <div class="form-row">
 
 
-            <div class="form-group">
+                 <div class="form-group">
+    <label for="cakeType">Cake Flavour</label>
 
-                <label for="customFlavour">
-                    Flavour
-                </label>
+    <select id="cakeType" name="cakeType" required onchange="handleCakeTypeChange()">
+        <option value="">Select Cake Flavour</option>
+        <option value="Chocolate Cake">Chocolate Cake</option>
+        <option value="Black Forest Cake">Black Forest Cake</option>
+        <option value="Red Velvet Cake">Red Velvet Cake</option>
+        <option value="Butterscotch Cake">Butterscotch Cake</option>
 
-                <select id="customFlavour">
+        <!-- NEW -->
+        <option value="Custom Photo Cake">📸 Custom Photo Cake</option>
+    </select>
+    <!-- Custom Photo Cake Upload -->
+<div id="customPhotoCakeBoard" class="photo-cake-board" style="display:none;">
 
-                    <option>Chocolate</option>
+    <div class="photo-cake-title">
+        📸 Custom Photo Cake
+    </div>
 
-                    <option>Vanilla</option>
+    <p class="photo-cake-info">
+        Custom Photo Cake પસંદ કર્યું છે, તેથી તમારો પોતાનો photo upload કરવો જરૂરી છે.
+    </p>
 
-                    <option>Black Forest</option>
+    <!-- Customer Self Photo - REQUIRED -->
+    <div class="photo-upload-box required-photo">
+        <label for="customerPhoto">
+            👤 Your Photo <span>* Required</span>
+        </label>
 
-                    <option>Red Velvet</option>
+        <input
+            type="file"
+            id="customerPhoto"
+            name="customerPhoto"
+            accept="image/*"
+        >
 
-                    <option>Butterscotch</option>
+        <small>તમારો photo અહીં upload કરો. Maximum 5 MB.</small>
 
-                    <option>Strawberry</option>
+        <div id="customerPhotoPreview">
+            
+        </div>
+    </div>
 
-                </select>
+</div>
 
-            </div>
+ <!-- Cake Weight -->
+    <div class="form-group">
+        <label for="cake-size">Cake Weight</label>
+
+        <select id="cake-size" required>
+            <option value="">Select Weight</option>
+
+            <option value="0.5 Kg">
+                0.5 Kg
+            </option>
+
+            <option value="1 Kg">
+                1 Kg
+            </option>
+
+            <option value="1.5 Kg">
+                1.5 Kg
+            </option>
+
+            <option value="2 Kg">
+                2 Kg
+            </option>
+
+            <option value="2.5 Kg">
+                2.5 Kg
+            </option>
+
+            <option value="3 Kg">
+                3 Kg
+            </option>
+
+            <option value="4 Kg">
+                4 Kg
+            </option>
+
+            <option value="5 Kg">
+                5 Kg
+            </option>
+        </select>
+    </div>
+
+</div> 
 
 
-            <div class="form-group">
-
-                <label for="customSize">
-                    Size
-                </label>
-
-                <select id="customSize">
-
-                    <option>1 kg</option>
-
-                    <option selected>2 kg</option>
-
-                    <option>2.5 kg</option>
-
-                    <option>3 kg</option>
-
-                    <option>Custom Size</option>
-
-                </select>
-
-            </div>
-
+ <div class="form-row">
 
         </div>
+
+<div class="form-group">
+    <label for="cakeDate">📅 Cake Required Date</label>
+    <input
+        type="date"
+        id="cakeDate"
+        name="cakeDate"
+        required
+    >
+</div>
+
         <div class="custom-cake-photo">
-    <label for="cakePhoto">
+     <label for="cakePhoto">
         📷 Favourite Cake Photo
-    </label>
+     </label>
 
     <input
         type="file"
@@ -527,7 +609,6 @@
 
 
 </section>
-
 
 
 <!-- =====================================================
@@ -1263,95 +1344,6 @@ With Love
 
 </footer>
 
-<!-- ================= RETURN POLICY ================= -->
-
-<section class="return-policy" id="return-policy">
-
-    <div class="return-policy-container">
-
-        <div class="return-policy-title">
-            <span>OUR POLICY</span>
-            <h2>Return & Replacement Policy</h2>
-            <p>
-                We want every order from SHEETAL BAKERY & LIVE CAKE SHOP
-                to reach you fresh, correct and in perfect condition.
-            </p>
-        </div>
-
-        <div class="policy-grid">
-
-            <div class="policy-card">
-                <div class="policy-icon">🔄</div>
-                <h3>Return / Replacement</h3>
-                <p>
-                    If you receive a wrong, damaged, defective or spoiled
-                    product, please contact us as soon as possible.
-                    Eligible items may be replaced or refunded after verification.
-                </p>
-            </div>
-
-            <div class="policy-card">
-                <div class="policy-icon">🍰</div>
-                <h3>Fresh Cakes & Bakery Items</h3>
-                <p>
-                    Fresh cakes, bakery products and other perishable food
-                    items cannot normally be returned after delivery because
-                    of their freshness and food-safety requirements.
-                </p>
-            </div>
-
-            <div class="policy-card">
-                <div class="policy-icon">📦</div>
-                <h3>Wrong Item Received</h3>
-                <p>
-                    If you receive an item different from what you ordered,
-                    please contact us immediately. We will verify the order
-                    and arrange a suitable replacement or refund.
-                </p>
-            </div>
-
-            <div class="policy-card">
-                <div class="policy-icon">📸</div>
-                <h3>Proof of Issue</h3>
-                <p>
-                    For damaged, wrong or defective products, please provide
-                    clear photos or videos of the product and packaging.
-                    This helps us process your request quickly.
-                </p>
-            </div>
-
-
-            <div class="policy-card">
-                <div class="policy-icon">💰</div>
-                <h3>Refund</h3>
-                <p>
-                    If a refund is approved, the refund amount and method
-                    will be communicated to you after verification of the
-                    issue and order details.
-                </p>
-            </div>
-
-        </div>
-
-        <div class="policy-note">
-            <strong>Important:</strong>
-            Return, replacement or refund requests are subject to verification.
-            Custom-made cakes and personalized products may have additional
-            conditions and cannot normally be cancelled or returned once
-            preparation has started.
-        </div>
-
-        <div class="policy-contact">
-            <h3>Need Help?</h3>
-            <p>
-                For return, replacement or refund assistance, please contact
-                SHEETAL BAKERY & LIVE CAKE SHOP through WhatsApp or phone.
-            </p>
-        </div>
-
-    </div>
-
-</section>
 
 <!-- ================= END RETURN POLICY ================= -->
 
