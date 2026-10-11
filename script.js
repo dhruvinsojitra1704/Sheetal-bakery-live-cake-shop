@@ -2119,39 +2119,35 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-
 // ==========================================
 // CUSTOM CAKE WHATSAPP ORDER
 // ==========================================
 
 function sendCustomCake(event) {
 
-    event.preventDefault();
+    if (event) {
+        event.preventDefault();
+    }
 
+    // Customer details
     const customerName =
-        document.getElementById("customerName")
-        ?.value.trim();
+        document.getElementById("customerName")?.value.trim() || "";
 
     const customerMobile =
-        document.getElementById("customerMobile")
-        ?.value.trim();
+        document.getElementById("customerMobile")?.value.trim() || "";
 
+    // Cake details
     const cakeType =
-        document.getElementById("cakeType")
-        ?.value.trim();
+        document.getElementById("cakeType")?.value.trim() || "";
 
     const cakeWeight =
-        document.getElementById("cakeWeight")
-        ?.value.trim();
+        document.getElementById("cakeWeight")?.value.trim() || "";
 
     const cakeDate =
-        document.getElementById("cakeDate")
-        ?.value;
+        document.getElementById("cakeDate")?.value || "";
 
     const cakeDetails =
-        document.getElementById("cakeDetails")
-        ?.value.trim();
-
+        document.getElementById("cakeDetails")?.value.trim() || "";
 
     // ==========================================
     // VALIDATION
@@ -2162,77 +2158,135 @@ function sendCustomCake(event) {
         return;
     }
 
-    if (!customerMobile) {
-        alert("Please enter your mobile number.");
-        return;
-    }
-
-    if (!/^[0-9]{10}$/.test(customerMobile)) {
-        alert("Please enter a valid 10-digit mobile number.");
+    if (!customerMobile || !/^[0-9]{10}$/.test(customerMobile)) {
+        alert("Please enter a valid 10 digit mobile number.");
         return;
     }
 
     if (!cakeType) {
-        alert("Please enter cake type.");
+        alert("Please select Cake Flavour.");
         return;
     }
 
     if (!cakeWeight) {
-        alert("Please enter cake weight.");
+        alert("Please select Cake Weight.");
         return;
     }
 
     if (!cakeDate) {
-        alert("Please select cake required date.");
+        alert("Please select Cake Required Date.");
         return;
     }
 
-
     // ==========================================
-    // PHOTO STATUS
+    // CUSTOM PHOTO CAKE VALIDATION
     // ==========================================
 
-    let photoMessage = "📷 Cake Photo: Not uploaded";
+    let customerPhoto = null;
 
-    if (selectedCakePhoto) {
-        photoMessage =
-            "📷 Cake Photo: " +
-            selectedCakePhoto.name +
-            " (selected on website)";
+    if (cakeType === "Custom Photo Cake") {
+
+        customerPhoto =
+            document.getElementById("customerPhoto");
+
+        if (!customerPhoto || !customerPhoto.files.length) {
+
+            alert(
+                "📸 Please upload your photo for Custom Photo Cake."
+            );
+
+            customerPhoto?.focus();
+
+            return;
+        }
     }
 
+    // ==========================================
+    // FORMAT DATE
+    // ==========================================
+
+    let formattedDate = cakeDate;
+
+    if (cakeDate) {
+
+        const dateParts = cakeDate.split("-");
+
+        if (dateParts.length === 3) {
+
+            formattedDate =
+                `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+        }
+    }
+
+    // ==========================================
+    // FAVOURITE CAKE PHOTO
+    // ==========================================
+
+    const favouritePhoto =
+        document.getElementById("cakePhoto");
+
+    const hasFavouritePhoto =
+        favouritePhoto &&
+        favouritePhoto.files &&
+        favouritePhoto.files.length > 0;
 
     // ==========================================
     // WHATSAPP MESSAGE
     // ==========================================
 
-    const message =
-`🎂 CUSTOM CAKE ORDER
+    let message = "";
 
-🏪 SHEETAL BAKERY & LIVE CAKE SHOP
+    message += `🎂 *CUSTOM CAKE ORDER*`;
+    message += `\n\n`;
 
-👤 Customer Name:
-${customerName}
+    message += `👤 *Customer Name:* ${customerName}`;
+    message += `\n`;
 
-📱 Mobile Number:
-${customerMobile}
+    message += `📱 *Phone:* ${customerMobile}`;
+    message += `\n\n`;
 
-🍰 Cake Type:
-${cakeType}
+    message += `🍰 *Cake Flavour:* ${cakeType}`;
+    message += `\n`;
 
-⚖️ Cake Weight:
-${cakeWeight}
+    message += `⚖️ *Cake Weight:* ${cakeWeight}`;
+    message += `\n`;
 
-📅 Required Date:
-${cakeDate}
+    message += `📅 *Cake Required Date:* ${formattedDate}`;
+    message += `\n`;
 
-🎨 Cake Details:
-${cakeDetails || "Not specified"}
+    message += `📝 *Design / Message:* ${
+        cakeDetails || "Not specified"
+    }`;
 
-${photoMessage}
+    message += `\n\n`;
 
-Please contact me regarding my custom cake order.`;
+    if (cakeType === "Custom Photo Cake") {
+        message += `📸 *Customer Photo:* Uploaded`;
+        message += `\n`;
+    }
 
+    if (hasFavouritePhoto) {
+        message += `⭐ *Favourite Cake Photo:* Uploaded`;
+        message += `\n`;
+    } else {
+        message += `⭐ *Favourite Cake Photo:* Not uploaded`;
+        message += `\n`;
+    }
+
+    message += `\n`;
+    message += `🏪 *SHEETAL BAKERY & LIVE CAKE SHOP*`;
+
+    // ==========================================
+    // WHATSAPP
+    // ==========================================
+
+    const whatsappNumber = "917874131575";
+
+    const whatsappURL =
+       `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+    window.open(whatsappURL, "_blank");
+}
 
     // ==========================================
     // OPEN WHATSAPP
@@ -2245,7 +2299,7 @@ Please contact me regarding my custom cake order.`;
         encodeURIComponent(message);
 
     window.open(whatsappURL, "_blank");
-}
+
 
 // ==========================================
 // CUSTOM PHOTO CAKE LOGIC
