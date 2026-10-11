@@ -2361,3 +2361,53 @@ function removeCustomerPhoto() {
         preview.innerHTML = "";
     }
 }
+
+// ==========================================
+// PERMANENT NAVIGATION BAR
+// ==========================================
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const nav = document.querySelector(".main-navigation");
+
+    if (!nav) return;
+
+    // Create invisible space so content does not jump
+    const navPlaceholder = document.createElement("div");
+
+    navPlaceholder.style.display = "none";
+    navPlaceholder.style.width = "100%";
+
+    nav.parentNode.insertBefore(navPlaceholder, nav);
+
+    const navStart = nav.offsetTop;
+
+    function handleNavigation() {
+
+        if (window.scrollY > navStart) {
+
+            if (!nav.classList.contains("nav-fixed")) {
+
+                // Keep same height in page
+                navPlaceholder.style.display = "block";
+                navPlaceholder.style.height = nav.offsetHeight + "px";
+
+                nav.classList.remove("nav-normal");
+                nav.classList.add("nav-fixed");
+            }
+
+        } else {
+
+            nav.classList.remove("nav-fixed");
+            nav.classList.add("nav-normal");
+
+            navPlaceholder.style.display = "none";
+        }
+    }
+
+    window.addEventListener("scroll", handleNavigation);
+
+    // Run once on page load
+    handleNavigation();
+
+});

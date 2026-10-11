@@ -2599,7 +2599,133 @@ img {
     .cake-option-card {
         padding: 15px;
     }
+  }
+
+
+
+/* ==========================================
+   PERMANENT NAVIGATION BAR
+   ========================================== */
+
+.main-navigation {
+    width: 100%;
+    min-height: 56px;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 7px 12px;
+
+    background: #fff9f5;
+    border-top: 1px solid #eaded7;
+    border-bottom: 1px solid #eaded7;
+
+    box-sizing: border-box;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    white-space: nowrap;
+
+    z-index: 99999;
+
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
 }
+
+.main-navigation::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* Normal position */
+
+.main-navigation.nav-normal {
+    position: relative;
+}
+
+
+/* ⭐ Permanent fixed position after scrolling */
+
+.main-navigation.nav-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    width: 100%;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+
+    z-index: 99999;
+}
+
+
+/* Navigation buttons */
+
+.main-navigation .nav-btn {
+    flex: 0 0 auto;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+
+    min-height: 40px;
+
+    padding: 7px 13px;
+
+    background: #ffffff;
+
+    border: 1px solid #eaded7;
+    border-radius: 12px;
+
+    color: #252525;
+
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    transition: 0.2s ease;
+}
+
+.main-navigation .nav-icon {
+    font-size: 16px;
+}
+
+.main-navigation .nav-btn:hover {
+    background: #d97757;
+    color: #ffffff;
+    border-color: #d97757;
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    .main-navigation {
+        min-height: 54px;
+        padding: 7px 9px;
+        gap: 7px;
+    }
+
+    .main-navigation .nav-btn {
+        min-height: 38px;
+        padding: 6px 10px;
+        font-size: 12px;
+        border-radius: 10px;
+    }
+
+    .main-navigation .nav-icon {
+        font-size: 15px;
+    }
+}
+
+
 /* =========================================
    UNIQUE BAKERY NAVIGATION
 ========================================= */
