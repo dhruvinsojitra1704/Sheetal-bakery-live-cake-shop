@@ -2230,9 +2230,9 @@ function sendCustomCake(event) {
         favouritePhoto.files &&
         favouritePhoto.files.length > 0;
 
-    // ==========================================
-    // WHATSAPP MESSAGE
-    // ==========================================
+// ==========================================
+// WHATSAPP MESSAGE
+// ==========================================
 
     let message = "";
 
@@ -2417,51 +2417,38 @@ function removeCustomerPhoto() {
 }
 
 // ==========================================
-// PERMANENT NAVIGATION BAR
+// HEADER + FIXED NAVIGATION POSITION
 // ==========================================
 
-document.addEventListener("DOMContentLoaded", function () {
+function updateHeaderHeight() {
 
+    const header = document.querySelector("header");
     const nav = document.querySelector(".main-navigation");
 
-    if (!nav) return;
+    if (!header || !nav) return;
 
-    // Create invisible space so content does not jump
-    const navPlaceholder = document.createElement("div");
+    const headerHeight = header.getBoundingClientRect().height;
 
-    navPlaceholder.style.display = "none";
-    navPlaceholder.style.width = "100%";
+    document.documentElement.style.setProperty(
+        "--header-height",
+        headerHeight + "px"
+    );
 
-    nav.parentNode.insertBefore(navPlaceholder, nav);
+    nav.style.top = headerHeight + "px";
+}
 
-    const navStart = nav.offsetTop;
+document.addEventListener("DOMContentLoaded", updateHeaderHeight);
+window.addEventListener("load", updateHeaderHeight);
+window.addEventListener("resize", updateHeaderHeight);
 
-    function handleNavigation() {
 
-        if (window.scrollY > navStart) {
+// Page load
+document.addEventListener("DOMContentLoaded", function () {
+    updateHeaderHeight();
+});
 
-            if (!nav.classList.contains("nav-fixed")) {
 
-                // Keep same height in page
-                navPlaceholder.style.display = "block";
-                navPlaceholder.style.height = nav.offsetHeight + "px";
-
-                nav.classList.remove("nav-normal");
-                nav.classList.add("nav-fixed");
-            }
-
-        } else {
-
-            nav.classList.remove("nav-fixed");
-            nav.classList.add("nav-normal");
-
-            navPlaceholder.style.display = "none";
-        }
-    }
-
-    window.addEventListener("scroll", handleNavigation);
-
-    // Run once on page load
-    handleNavigation();
-
+// Window resize
+window.addEventListener("resize", function () {
+    updateHeaderHeight();
 });
