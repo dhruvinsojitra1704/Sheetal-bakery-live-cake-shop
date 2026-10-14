@@ -3376,3 +3376,143 @@ header {
     }
   }
  
+/* ==========================================
+   POLICY PAGE - SHEETAL BAKERY HEADER
+   ========================================== */
+
+.policy-site-header {
+    width: 100%;
+    min-height: 78px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 10px 25px;
+
+    box-sizing: border-box;
+
+    background: #fff9f5;
+
+    border-bottom: 1px solid #eaded7;
+
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+
+    position: relative;
+    z-index: 10;
+}
+
+
+/* Logo + Name */
+
+.policy-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.policy-logo {
+    display: flex;
+    align-items: center;
+}
+
+.policy-logo img {
+    width: 55px;
+    height: 55px;
+
+    object-fit: contain;
+
+    display: block;
+}
+
+
+/* Bakery Name */
+
+.policy-brand-text h2 {
+    margin: 0;
+
+    font-family: Georgia, serif;
+
+    font-size: 22px;
+
+    color: #5b3025;
+
+    line-height: 1.1;
+}
+
+.policy-brand-text p {
+    margin: 4px 0 0;
+
+    font-family: Georgia, serif;
+
+    font-size: 13px;
+
+    color: #6f625c;
+
+    letter-spacing: 0.5px;
+}
+
+
+/* Home Button */
+
+.policy-back-home {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 17px;
+
+    background: #ffffff;
+
+    border: 1px solid #eaded7;
+
+    border-radius: 12px;
+
+    color: #5b3025;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    transition: 0.25s ease;
+}
+
+.policy-back-home:hover {
+    background: #d97757;
+    color: #ffffff;
+    border-color: #d97757;
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    .policy-site-header {
+        min-height: 68px;
+
+        padding: 8px 12px;
+    }
+
+    .policy-logo img {
+        width: 45px;
+        height: 45px;
+    }
+
+    .policy-brand-text h2 {
+        font-size: 17px;
+    }
+
+    .policy-brand-text p {
+        font-size: 10px;
+    }
+
+    .policy-back-home {
+        padding: 8px 11px;
+
+        font-size: 11px;
+    }
+}
