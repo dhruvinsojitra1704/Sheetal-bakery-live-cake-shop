@@ -3516,3 +3516,1318 @@ header {
         font-size: 11px;
     }
 }
+/* =========================================================
+   SHEETAL BAKERY - UNIQUE REVIEW & PLACE ORDER POPUP
+========================================================= */
+
+/* Popup Overlay */
+.order-modal-overlay,
+.review-order-overlay,
+#orderModal {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(45, 25, 18, 0.72);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+    box-sizing: border-box;
+
+    z-index: 99999;
+
+    animation: orderOverlayIn 0.3s ease;
+}
+
+/* Main Popup */
+.order-modal,
+.review-order-modal,
+.order-popup {
+    width: min(900px, 96vw);
+    max-height: 92vh;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fffaf6 0%,
+            #fff3eb 50%,
+            #fffaf7 100%
+        );
+
+    border: 2px solid #ead0c2;
+    border-radius: 28px;
+
+    box-shadow:
+        0 30px 80px rgba(45, 20, 10, 0.35),
+        0 8px 25px rgba(217, 119, 87, 0.18);
+
+    position: relative;
+
+    padding: 32px;
+
+    animation: orderPopupIn 0.45s cubic-bezier(.17,.67,.3,1.3);
+}
+
+/* Top Bakery Decoration */
+.order-modal::before,
+.review-order-modal::before,
+.order-popup::before {
+    content: "🎂  ❤️  🍰  ✨";
+
+    display: block;
+    text-align: center;
+
+    font-size: 22px;
+    letter-spacing: 8px;
+
+    margin-bottom: 8px;
+}
+
+/* Heading */
+.order-modal h2,
+.review-order-modal h2,
+.order-popup h2 {
+    margin: 0 0 22px;
+
+    text-align: center;
+
+    color: #5b3025;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: clamp(28px, 5vw, 42px);
+
+    line-height: 1.15;
+
+    font-weight: 700;
+
+    text-shadow: 0 2px 2px rgba(91, 48, 37, 0.08);
+}
+
+/* Heading underline */
+.order-modal h2::after,
+.review-order-modal h2::after,
+.order-popup h2::after {
+    content: "";
+
+    display: block;
+
+    width: 90px;
+    height: 4px;
+
+    margin: 12px auto 0;
+
+    border-radius: 20px;
+
+    background: linear-gradient(
+        90deg,
+        #d97757,
+        #f3a07e,
+        #d97757
+    );
+}
+
+/* Customer Details Card */
+.order-customer-details,
+.customer-details,
+.customer-info {
+    background: #fff;
+
+    border: 1px solid #eaded7;
+
+    border-radius: 18px;
+
+    padding: 20px;
+
+    margin-bottom: 18px;
+
+    box-shadow:
+        0 8px 25px rgba(91, 48, 37, 0.07);
+}
+
+/* Customer text */
+.order-customer-details p,
+.customer-details p,
+.customer-info p {
+    margin: 9px 0;
+
+    color: #5f514c;
+
+    font-size: 15px;
+
+    line-height: 1.6;
+}
+
+/* Icons */
+.order-customer-details p:first-letter,
+.customer-details p:first-letter,
+.customer-info p:first-letter {
+    color: #c85f43;
+}
+
+/* Order Items Box */
+.order-items,
+.order-summary,
+.cart-summary {
+    background:
+        linear-gradient(
+            135deg,
+            #fff5ee,
+            #fffdfb
+        );
+
+    border: 1px solid #efd4c7;
+
+    border-radius: 18px;
+
+    padding: 20px;
+
+    margin: 18px 0;
+}
+
+/* Order item */
+.order-item,
+.cart-item-summary {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 13px 0;
+
+    border-bottom: 1px dashed #e2c9bd;
+
+    color: #59443d;
+
+    font-size: 15px;
+}
+
+.order-item:last-child,
+.cart-item-summary:last-child {
+    border-bottom: none;
+}
+
+/* Total */
+.order-total,
+.total-amount {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-top: 18px;
+
+    padding: 18px 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff0e8,
+            #ffe4d7
+        );
+
+    border: 1px solid #e7b9a6;
+
+    border-radius: 18px;
+
+    color: #5b3025;
+
+    font-size: 20px;
+
+    font-weight: 700;
+}
+
+/* ₹ amount */
+.order-total strong,
+.total-amount strong,
+.order-total span:last-child,
+.total-amount span:last-child {
+    color: #c84f35;
+
+    font-size: 25px;
+}
+
+/* =========================================================
+   CUSTOMER INPUTS
+========================================================= */
+
+.order-modal input,
+.order-modal textarea,
+.review-order-modal input,
+.review-order-modal textarea,
+.order-popup input,
+.order-popup textarea {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 13px 15px;
+
+    margin-top: 7px;
+
+    border: 1px solid #dfc9bf;
+
+    border-radius: 13px;
+
+    background: #fffdfb;
+
+    color: #493b36;
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition: all 0.25s ease;
+}
+
+.order-modal input:focus,
+.order-modal textarea:focus,
+.review-order-modal input:focus,
+.review-order-modal textarea:focus,
+.order-popup input:focus,
+.order-popup textarea:focus {
+
+    border-color: #d97757;
+
+    background: #fff;
+
+    box-shadow:
+        0 0 0 4px rgba(217, 119, 87, 0.12);
+}
+
+/* =========================================================
+   PLACE ORDER BUTTON
+========================================================= */
+
+#placeOrderBtn {
+
+    width: 100%;
+
+    min-height: 58px;
+
+    margin-top: 22px;
+
+    border: none;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #b9573a,
+            #d97757,
+            #e88b68
+        );
+
+    color: white;
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.3px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 22px rgba(185, 87, 58, 0.32);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+#placeOrderBtn:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 13px 30px rgba(185, 87, 58, 0.40);
+}
+
+#placeOrderBtn:active {
+
+    transform: translateY(1px);
+
+    box-shadow:
+        0 5px 12px rgba(185, 87, 58, 0.25);
+}
+
+/* =========================================================
+   CLOSE BUTTON
+========================================================= */
+
+.order-close-btn,
+.close-order-popup,
+.order-modal .close-btn {
+
+    position: absolute;
+
+    top: 16px;
+    right: 18px;
+
+    width: 40px;
+    height: 40px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #6b382a;
+
+    color: white;
+
+    font-size: 20px;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    transition: all 0.25s ease;
+}
+
+.order-close-btn:hover,
+.close-order-popup:hover,
+.order-modal .close-btn:hover {
+
+    background: #d97757;
+
+    transform: rotate(90deg) scale(1.08);
+}
+
+/* =========================================================
+   SUCCESS POPUP
+========================================================= */
+
+.success-order-popup,
+.order-success-popup,
+#successPopup {
+
+    position: fixed;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    width: min(500px, 90vw);
+
+    padding: 38px 28px;
+
+    box-sizing: border-box;
+
+    background:
+        linear-gradient(
+            145deg,
+            #fffaf6,
+            #fff0e7
+        );
+
+    border: 2px solid #e8c8b9;
+
+    border-radius: 28px;
+
+    text-align: center;
+
+    z-index: 100001;
+
+    box-shadow:
+        0 30px 80px rgba(45, 20, 10, 0.35);
+
+    animation: successPopupIn 0.5s cubic-bezier(.17,.67,.3,1.3);
+}
+
+/* Success Icon */
+.success-order-popup::before,
+.order-success-popup::before,
+#successPopup::before {
+
+    content: "✓";
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 70px;
+    height: 70px;
+
+    margin: 0 auto 18px;
+
+    border-radius: 50%;
+
+    background: #4caf50;
+
+    color: white;
+
+    font-size: 42px;
+
+    font-weight: 800;
+
+    box-shadow:
+        0 8px 20px rgba(76, 175, 80, 0.28);
+}
+
+/* Success Heading */
+.success-order-popup h2,
+.order-success-popup h2,
+#successPopup h2 {
+
+    color: #5b3025;
+
+    font-family: Georgia, serif;
+
+    font-size: 28px;
+
+    margin: 10px 0;
+}
+
+/* Success Text */
+.success-order-popup p,
+.order-success-popup p,
+#successPopup p {
+
+    color: #6f625c;
+
+    font-size: 15px;
+
+    line-height: 1.6;
+
+    margin: 8px 0;
+}
+
+/* WhatsApp Button */
+.whatsapp-order-btn,
+.open-whatsapp-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    width: 100%;
+
+    min-height: 52px;
+
+    margin-top: 20px;
+
+    border-radius: 15px;
+
+    background: #25d366;
+
+    color: white;
+
+    text-decoration: none;
+
+    font-weight: 700;
+
+    font-size: 16px;
+
+    border: none;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 20px rgba(37, 211, 102, 0.25);
+
+    transition: all 0.25s ease;
+}
+
+.whatsapp-order-btn:hover,
+.open-whatsapp-btn:hover {
+
+    transform: translateY(-2px);
+
+    background: #20bd5c;
+
+    box-shadow:
+        0 12px 25px rgba(37, 211, 102, 0.32);
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes orderOverlayIn {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes orderPopupIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(35px) scale(0.94);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes successPopupIn {
+
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.75);
+    }
+
+    70% {
+        transform: translate(-50%, -50%) scale(1.04);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* =========================================================
+   MOBILE DESIGN
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .order-modal-overlay,
+    .review-order-overlay,
+    #orderModal {
+
+        padding: 10px;
+    }
+
+    .order-modal,
+    .review-order-modal,
+    .order-popup {
+
+        width: 100%;
+
+        max-height: 94vh;
+
+        padding: 22px 15px;
+
+        border-radius: 22px;
+    }
+
+    .order-modal::before,
+    .review-order-modal::before,
+    .order-popup::before {
+
+        font-size: 17px;
+
+        letter-spacing: 4px;
+    }
+
+    .order-modal h2,
+    .review-order-modal h2,
+    .order-popup h2 {
+
+        font-size: 27px;
+
+        padding-right: 25px;
+    }
+
+    .order-customer-details,
+    .customer-details,
+    .customer-info,
+    .order-items,
+    .order-summary,
+    .cart-summary {
+
+        padding: 15px;
+
+        border-radius: 15px;
+    }
+
+    .order-item,
+    .cart-item-summary {
+
+        font-size: 13px;
+
+        gap: 8px;
+    }
+
+    .order-total,
+    .total-amount {
+
+        padding: 15px;
+
+        font-size: 17px;
+    }
+
+    .order-total strong,
+    .total-amount strong,
+    .order-total span:last-child,
+    .total-amount span:last-child {
+
+        font-size: 21px;
+    }
+
+    #placeOrderBtn {
+
+        min-height: 54px;
+
+        font-size: 16px;
+
+        border-radius: 15px;
+    }
+
+    .success-order-popup,
+    .order-success-popup,
+    #successPopup {
+
+        width: 92vw;
+
+        padding: 30px 20px;
+
+        border-radius: 22px;
+    }
+
+    .success-order-popup h2,
+    .order-success-popup h2,
+    #successPopup h2 {
+
+        font-size: 24px;
+    }
+}
+
+/* =====================================================
+   UNIQUE CONFIRM ORDER POPUP
+===================================================== */
+
+.confirm-order-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(55, 30, 24, 0.65);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 99999;
+    animation: confirmFadeIn 0.25s ease;
+}
+
+.confirm-order-box {
+    width: min(430px, 100%);
+    background: #fffaf7;
+    border: 1px solid #eaded7;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.30);
+    animation: confirmPopIn 0.3s ease;
+    font-family: "Poppins", sans-serif;
+}
+
+/* Header */
+.confirm-order-header {
+    background: linear-gradient(135deg, #d97757, #b9573a);
+    color: white;
+    padding: 25px 22px;
+    text-align: center;
+    position: relative;
+}
+
+.confirm-order-cake-icon {
+    width: 62px;
+    height: 62px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 31px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.confirm-order-header h3 {
+    margin: 0;
+    font-size: 23px;
+    font-weight: 700;
+}
+
+.confirm-order-header p {
+    margin: 6px 0 0;
+    font-size: 12px;
+    opacity: 0.9;
+}
+
+/* Close button */
+.confirm-order-close {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.18);
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.confirm-order-close:hover {
+    background: rgba(255,255,255,0.30);
+}
+
+/* Body */
+.confirm-order-body {
+    padding: 22px;
+}
+
+.confirm-order-info {
+    background: #fff;
+    border: 1px solid #eaded7;
+    border-radius: 16px;
+    padding: 15px;
+}
+
+.confirm-order-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid #f0e5df;
+    font-size: 14px;
+}
+
+.confirm-order-row:last-child {
+    border-bottom: none;
+}
+
+.confirm-order-row .row-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    background: #f6e3d8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.confirm-order-row strong {
+    color: #5b3025;
+}
+
+.confirm-order-total {
+    margin-top: 15px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: #f6e3d8;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.confirm-order-total span {
+    color: #6f625c;
+    font-size: 14px;
+}
+
+.confirm-order-total strong {
+    color: #b9573a;
+    font-size: 21px;
+}
+
+/* Buttons */
+.confirm-order-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.confirm-order-cancel,
+.confirm-order-yes {
+    flex: 1;
+    min-height: 48px;
+    border-radius: 13px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.25s ease;
+}
+
+.confirm-order-cancel {
+    background: white;
+    border: 1px solid #eaded7;
+    color: #6f625c;
+}
+
+.confirm-order-cancel:hover {
+    background: #f8efeb;
+}
+
+.confirm-order-yes {
+    border: none;
+    color: white;
+    background: linear-gradient(135deg, #d97757, #b9573a);
+    box-shadow: 0 7px 18px rgba(185, 87, 58, 0.25);
+}
+
+.confirm-order-yes:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(185, 87, 58, 0.35);
+}
+
+@keyframes confirmFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes confirmPopIn {
+    from {
+        opacity: 0;
+        transform: scale(0.88) translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+
+    .confirm-order-overlay {
+        padding: 14px;
+    }
+
+    .confirm-order-box {
+        border-radius: 20px;
+    }
+
+    .confirm-order-header {
+        padding: 22px 18px;
+    }
+
+    .confirm-order-header h3 {
+        font-size: 20px;
+    }
+
+    .confirm-order-body {
+        padding: 17px;
+    }
+
+    .confirm-order-actions {
+        flex-direction: column-reverse;
+    }
+
+    .confirm-order-cancel,
+    .confirm-order-yes {
+        width: 100%;
+    }
+}
+/* =====================================================
+   UNIQUE CONFIRM ORDER POPUP
+===================================================== */
+
+.confirm-order-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(35, 20, 15, 0.68);
+    backdrop-filter: blur(7px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 18px;
+
+    z-index: 999999;
+
+    animation: confirmFadeIn 0.25s ease;
+}
+
+
+.confirm-order-box {
+    width: min(430px, 100%);
+
+    background: #fffaf7;
+
+    border: 1px solid #eaded7;
+
+    border-radius: 24px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.35);
+
+    font-family: "Poppins", sans-serif;
+
+    animation: confirmPopIn 0.3s ease;
+}
+
+
+/* HEADER */
+
+.confirm-order-header {
+    position: relative;
+
+    padding: 26px 20px;
+
+    text-align: center;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d97757,
+            #b9573a
+        );
+}
+
+
+.confirm-order-cake-icon {
+    width: 64px;
+    height: 64px;
+
+    margin: 0 auto 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,0.18);
+
+    font-size: 32px;
+
+    box-shadow:
+        0 8px 20px rgba(0,0,0,0.15);
+}
+
+
+.confirm-order-header h3 {
+    margin: 0;
+
+    font-size: 23px;
+
+    font-weight: 700;
+}
+
+
+.confirm-order-header p {
+    margin: 6px 0 0;
+
+    font-size: 11px;
+
+    opacity: 0.9;
+}
+
+
+/* CLOSE */
+
+.confirm-order-close {
+    position: absolute;
+
+    top: 12px;
+    right: 14px;
+
+    width: 34px;
+    height: 34px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,0.18);
+
+    color: white;
+
+    font-size: 22px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+.confirm-order-close:hover {
+    background: rgba(255,255,255,0.30);
+
+    transform: rotate(90deg);
+}
+
+
+/* BODY */
+
+.confirm-order-body {
+    padding: 22px;
+}
+
+
+.confirm-order-info {
+    background: white;
+
+    border: 1px solid #eaded7;
+
+    border-radius: 16px;
+
+    padding: 15px;
+}
+
+
+/* ROW */
+
+.confirm-order-row {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+    padding: 10px 0;
+
+    border-bottom: 1px solid #f0e5df;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+.confirm-order-row:last-child {
+    border-bottom: none;
+}
+
+
+.confirm-order-row .row-icon {
+    width: 32px;
+    height: 32px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #f6e3d8;
+
+    font-size: 16px;
+}
+
+
+.confirm-order-row strong {
+    color: #5b3025;
+}
+
+
+/* TOTAL */
+
+.confirm-order-total {
+    margin-top: 15px;
+
+    padding: 15px 17px;
+
+    border-radius: 15px;
+
+    background: #f6e3d8;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+
+.confirm-order-total span {
+    color: #6f625c;
+
+    font-size: 14px;
+}
+
+
+.confirm-order-total strong {
+    color: #b9573a;
+
+    font-size: 22px;
+}
+
+
+/* BUTTONS */
+
+.confirm-order-actions {
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
+
+.confirm-order-cancel,
+.confirm-order-yes {
+    flex: 1;
+
+    min-height: 48px;
+
+    border-radius: 13px;
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    transition: 0.25s ease;
+}
+
+
+.confirm-order-cancel {
+    background: white;
+
+    border: 1px solid #eaded7;
+
+    color: #6f625c;
+}
+
+
+.confirm-order-cancel:hover {
+    background: #fff1eb;
+}
+
+
+.confirm-order-yes {
+    border: none;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d97757,
+            #b9573a
+        );
+
+    box-shadow:
+        0 7px 18px rgba(185,87,58,0.25);
+}
+
+
+.confirm-order-yes:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 24px rgba(185,87,58,0.35);
+}
+
+
+/* ANIMATION */
+
+@keyframes confirmFadeIn {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+}
+
+
+@keyframes confirmPopIn {
+
+    from {
+        opacity: 0;
+
+        transform:
+            scale(0.88)
+            translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            scale(1)
+            translateY(0);
+    }
+
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .confirm-order-overlay {
+        padding: 14px;
+    }
+
+
+    .confirm-order-box {
+        border-radius: 20px;
+    }
+
+
+    .confirm-order-header {
+        padding: 22px 18px;
+    }
+
+
+    .confirm-order-header h3 {
+        font-size: 20px;
+    }
+
+
+    .confirm-order-body {
+        padding: 17px;
+    }
+
+
+    .confirm-order-actions {
+        flex-direction: column-reverse;
+    }
+
+
+    .confirm-order-cancel,
+    .confirm-order-yes {
+        width: 100%;
+    }
+
+}

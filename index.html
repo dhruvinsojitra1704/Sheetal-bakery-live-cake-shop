@@ -1093,14 +1093,12 @@
         </div>
 
 
-     <button type="button" class="place-order-btn" onclick="confirmPlaceOrder()">
+    <button type="button"
+        id="placeOrderBtn"
+        class="place-order-btn"
+        onclick="placeOrder(event)">
     🔒 Place Order
 </button>
-
-<button type="button" class="payment-btn" onclick="startRazorpayPayment()">
-    💳 Pay Online / UPI
-</button>
-
 
     </div>
 
@@ -1170,6 +1168,79 @@
 
         </button>
 
+
+    </div>
+
+</div>
+
+<!-- =====================================================
+     CUSTOM ORDER CONFIRMATION POPUP
+===================================================== -->
+
+<div id="orderConfirmModal" class="order-confirm-overlay">
+
+    <div class="order-confirm-box">
+
+        <button type="button"
+                class="order-close-btn"
+                onclick="closeOrderConfirm()">
+            ×
+        </button>
+
+        <div class="order-success-icon">
+            🎂
+        </div>
+
+        <h2>Confirm Your Order</h2>
+
+        <p class="order-confirm-subtitle">
+            Please check your order details
+        </p>
+
+        <div class="order-details-card">
+
+            <div class="order-detail-row">
+                <span>👤 Customer</span>
+                <strong id="confirmCustomerName">-</strong>
+            </div>
+
+            <div class="order-detail-row">
+                <span>📞 Mobile</span>
+                <strong id="confirmCustomerMobile">-</strong>
+            </div>
+
+            <div class="order-detail-row">
+                <span>📍 Address</span>
+                <strong id="confirmCustomerAddress">-</strong>
+            </div>
+
+            <div class="order-detail-row total-row">
+                <span>💰 Total Amount</span>
+                <strong id="confirmOrderTotal">₹0</strong>
+            </div>
+
+        </div>
+
+        <div class="order-confirm-note">
+            🛍️ Your order will be sent to
+            <strong>SHEETAL BAKERY</strong> on WhatsApp.
+        </div>
+
+        <div class="order-confirm-actions">
+
+            <button type="button"
+                    class="order-cancel-btn"
+                    onclick="closeOrderConfirm()">
+                ✕ Cancel
+            </button>
+
+            <button type="button"
+                    class="order-confirm-btn"
+                    onclick="confirmAndSendOrder()">
+                ✓ Confirm Order
+            </button>
+
+        </div>
 
     </div>
 

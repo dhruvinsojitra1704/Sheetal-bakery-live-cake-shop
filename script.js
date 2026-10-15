@@ -1418,92 +1418,6 @@ function closeReview() {
 }
 
 
-
-/* =====================================================
-   PLACE ORDER
-===================================================== */
-
-function confirmPlaceOrder() {
-
-    placeOrder();
-
-}
-
-
-/* =====================================================
-   PLACE ORDER
-===================================================== */
-
-function placeOrder() {
-
-    if (!customerData) {
-
-        alert("Please enter your delivery details first.");
-
-        return;
-
-    }
-
-
-    if (cart.length === 0) {
-
-        alert("Your cart is empty.");
-
-        return;
-
-    }
-
-
-    const orderId =
-        "SB" +
-        Date.now().toString().slice(-8);
-
-
-    const subtotal =
-        getSubtotal();
-
-
-    const delivery =
-        customerData.orderType === "Pick Up"
-            ? 0
-            : 30;
-
-
-    const total =
-        subtotal + delivery;
-
-
-    lastOrderMessage =
-        createWhatsAppOrderMessage(
-            orderId,
-            subtotal,
-            delivery,
-            total
-        );
-
-
-    document.getElementById(
-        "orderId"
-    ).textContent = orderId;
-
-
-    closeReview();
-
-
-    document
-        .getElementById("successOverlay")
-        .classList.add("active");
-
-
-    // Clear cart after order
-    cart = [];
-
-    saveCart();
-
-    updateCartUI();
-
-}
-
 /* =====================================================
    WHATSAPP ORDER MESSAGE
 ===================================================== */
@@ -2288,19 +2202,6 @@ function sendCustomCake(event) {
     window.open(whatsappURL, "_blank");
 }
 
-    // ==========================================
-    // OPEN WHATSAPP
-    // ==========================================
-
-    const whatsappURL =
-        "https://wa.me/" +
-        WHATSAPP_NUMBER +
-        "?text=" +
-        encodeURIComponent(message);
-
-    window.open(whatsappURL, "_blank");
-
-
 // ==========================================
 // CUSTOM PHOTO CAKE LOGIC
 // ==========================================
@@ -2451,4 +2352,363 @@ document.addEventListener("DOMContentLoaded", function () {
 // Window resize
 window.addEventListener("resize", function () {
     updateHeaderHeight();
+});
+
+/* =====================================================
+   PLACE ORDER
+===================================================== */
+
+function placeOrder(event) {
+
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    console.log("✅ PLACE ORDER CLICKED");
+
+    // Cart check
+    if (typeof cart === "undefined" || !cart || cart.length === 0) {
+        alert("🛒 Your cart is empty.");
+        return;
+    }
+
+    // Name
+    const nameInput =
+        document.getElementById("customerName") ||
+        document.getElementById("name");
+
+    const name = nameInput
+        ? nameInput.value.trim()
+        : "";
+
+    // Mobile
+    let phone = "";
+
+    const inputs = document.querySelectorAll("input");
+
+    inputs.forEach(function(input) {
+
+        const value = input.value
+            .replace(/\s/g, "")
+            .replace(/-/g, "");
+
+        if (/^[6-9][0-9]{9}$/.test(value)) {
+            phone = value;
+        }
+    });
+
+    // Address
+    const addressInput =
+        document.getElementById("customerAddress") ||
+        document.getElementById("address") ||
+        document.querySelector('textarea[name="address"]');
+
+    const address = addressInput
+        ? addressInput.value.trim()
+        : "";
+
+    // Validation
+    if (!name) {
+        alert("Please enter your name.");
+        return;
+    }
+
+    if (!phone) {
+        alert("Please enter a valid 10-digit mobile number.");
+        return;
+    }
+
+    if (!address) {
+        alert("Please enter your delivery address.");
+        return;
+    }
+
+    const total = getTotal();
+
+    /* =================================================
+       CUSTOM CONFIRM ORDER POPUP
+    ================================================= */
+
+    const overlay = document.createElement("div");
+
+    overlay.className = "confirm-order-overlay";
+
+    overlay.innerHTML = `
+        <div class="confirm-order-box">
+
+            <div class="confirm-order-header">
+
+                <button
+                    type="button"
+                    class="confirm-order-close"
+                    id="confirmOrderClose">
+                    ×
+                </button>
+
+                <div class="confirm-order-cake-icon">
+                    🎂
+                </div>
+
+                <h3>Confirm Your Order</h3>
+
+                <p>
+                    SHEETAL BAKERY & LIVE CAKE SHOP
+                </p>
+
+            </div>
+
+
+            <div class="confirm-order-body">
+
+                <div class="confirm-order-info">
+
+                    <div class="confirm-order-row">
+
+                        <span class="row-icon">
+                            👤
+                        </span>
+
+                        <div>
+                            <strong>Customer</strong>
+                            <br>
+                            ${escapeHTML(name)}
+                        </div>
+
+                    </div>
+
+
+                    <div class="confirm-order-row">
+
+                        <span class="row-icon">
+                            📞
+                        </span>
+
+                        <div>
+                            <strong>Mobile</strong>
+                            <br>
+                            ${escapeHTML(phone)}
+                        </div>
+
+                    </div>
+
+
+                    <div class="confirm-order-row">
+
+                        <span class="row-icon">
+                            📍
+                        </span>
+
+                        <div>
+                            <strong>Delivery Address</strong>
+                            <br>
+                            ${escapeHTML(address)}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="confirm-order-total">
+
+                    <span>
+                        💰 Total Amount
+                    </span>
+
+                    <strong>
+                        ₹${total}
+                    </strong>
+
+                </div>
+
+
+                <div class="confirm-order-actions">
+
+                    <button
+                        type="button"
+                        class="confirm-order-cancel"
+                        id="confirmOrderCancel">
+
+                        Cancel
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="confirm-order-yes"
+                        id="confirmOrderYes">
+
+                        🎉 Confirm Order
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+
+
+    document.body.appendChild(overlay);
+
+
+    /* =================================================
+       CLOSE POPUP
+    ================================================= */
+
+    document
+        .getElementById("confirmOrderClose")
+        .onclick = function () {
+
+            overlay.remove();
+
+        };
+
+
+    document
+        .getElementById("confirmOrderCancel")
+        .onclick = function () {
+
+            overlay.remove();
+
+        };
+
+
+    /* =================================================
+       CONFIRM ORDER
+    ================================================= */
+
+    document
+        .getElementById("confirmOrderYes")
+        .onclick = function () {
+
+            overlay.remove();
+
+
+            // WhatsApp message
+            let message =
+                "🎂 *SHEETAL BAKERY & LIVE CAKE SHOP*\n\n" +
+                "🛍️ *NEW ORDER*\n\n" +
+                "👤 Name: " + name + "\n" +
+                "📞 Mobile: " + phone + "\n" +
+                "📍 Address: " + address + "\n\n";
+
+
+            message += "🧁 *ORDER ITEMS:*\n";
+
+
+            cart.forEach(function(item) {
+
+                const quantity =
+                    Number(item.quantity) || 1;
+
+                const price =
+                    Number(item.price) || 0;
+
+                message +=
+                    "• " +
+                    item.name +
+                    " × " +
+                    quantity +
+                    " = ₹" +
+                    (quantity * price) +
+                    "\n";
+
+            });
+
+
+            message +=
+                "\n💰 *TOTAL AMOUNT: ₹" +
+                total +
+                "*" +
+                "\n💵 Payment: Cash on Delivery" +
+                "\n\n🙏 Thank you for ordering!" +
+                "\n*SHEETAL BAKERY & LIVE CAKE SHOP* ❤️";
+
+
+            const whatsappNumber =
+                "917874131575";
+
+
+            const whatsappURL =
+                "https://wa.me/" +
+                whatsappNumber +
+                "?text=" +
+                encodeURIComponent(message);
+
+
+            // Success message
+            alert(
+                "🎉 ORDER PLACED SUCCESSFULLY!\n\n" +
+                "Thank you, " +
+                name +
+                " ❤️"
+            );
+
+
+            // Open WhatsApp
+            window.open(
+                whatsappURL,
+                "_blank"
+            );
+
+        };
+
+
+    /* =================================================
+       CLOSE WHEN CLICKING OUTSIDE
+    ================================================= */
+
+    overlay.addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                event.target === overlay
+            ) {
+
+                overlay.remove();
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+cart.forEach(function(item) {
+
+    const quantity =
+        Number(item.quantity) || 1;
+
+    const price =
+        Number(item.unitPrice) || 0;
+
+    message +=
+        "• " +
+        item.name +
+        " × " +
+        quantity +
+        " = ₹" +
+        (quantity * price) +
+        "\n";
+
 });
