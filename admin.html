@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#5b3025">
+    <title>Shop Admin | SHEETAL BAKERY</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <main class="admin-shell">
+        <header class="admin-header">
+            <a class="brand" href="index.html" aria-label="Back to shop">
+                <span class="brand-icon" aria-hidden="true">🎂</span>
+                <span>
+                    <strong>SHEETAL BAKERY</strong>
+                    <small>SHOP ADMIN</small>
+                </span>
+            </a>
+            <a class="shop-link" href="index.html">View shop</a>
+        </header>
+
+        <section id="setupNotice" class="notice" hidden>
+            <h1>Finish Firebase setup</h1>
+            <p>Add your Firebase Web App settings and admin email to <code>firebase-config.js</code>, then enable Firebase Authentication, Firestore, and Storage.</p>
+        </section>
+
+        <section id="loginPanel" class="panel auth-panel" hidden>
+            <div class="eyebrow">PRIVATE SHOP MANAGEMENT</div>
+            <h1>Sign in to manage products</h1>
+            <p>Only the shop admin account can change product photos and prices.</p>
+            <form id="loginForm">
+                <label for="adminEmailInput">Admin email</label>
+                <input id="adminEmailInput" type="email" autocomplete="username" required>
+                <label for="adminPasswordInput">Password</label>
+                <input id="adminPasswordInput" type="password" autocomplete="current-password" required>
+                <button class="primary-button" type="submit">Sign in securely</button>
+            </form>
+            <p id="loginStatus" class="status" role="status" aria-live="polite"></p>
+        </section>
+
+        <section id="verificationPanel" class="panel" hidden>
+            <div class="eyebrow">ONE-TIME SECURITY CHECK</div>
+            <h1>Verify the admin email</h1>
+            <p>Firebase requires the authorized admin email to be verified before products can be changed.</p>
+            <button id="sendVerificationButton" class="primary-button" type="button">Send verification email</button>
+            <button id="refreshVerificationButton" class="secondary-button" type="button">I verified it — continue</button>
+            <button id="verificationSignOutButton" class="text-button" type="button">Sign out</button>
+            <p id="verificationStatus" class="status" role="status" aria-live="polite"></p>
+        </section>
+
+        <section id="dashboard" hidden>
+            <div class="dashboard-heading">
+                <div>
+                    <div class="eyebrow">YOUR CATALOG</div>
+                    <h1>Products &amp; prices</h1>
+                    <p>Changes are saved online and appear on the shop for all customers.</p>
+                </div>
+                <button id="signOutButton" class="secondary-button" type="button">Sign out</button>
+            </div>
+
+            <div class="dashboard-grid">
+                <section class="panel editor-panel">
+                    <h2 id="editorTitle">Add a product</h2>
+                    <form id="productForm">
+                        <label for="productName">Product name</label>
+                        <input id="productName" name="name" maxlength="80" required>
+
+                        <label for="productCategory">Category</label>
+                        <select id="productCategory" name="category" required>
+                            <option value="Cakes">Cakes</option>
+                            <option value="Bakery">Bakery</option>
+                            <option value="Snacks">Snacks</option>
+                            <option value="Cold Drinks">Cold Drinks</option>
+                            <option value="Grocery">Grocery</option>
+                            <option value="Dry Fruits">Dry Fruits</option>
+                            <option value="Chocolates">Chocolates</option>
+                        </select>
+
+                        <label for="productPrice">Price (₹)</label>
+                        <input id="productPrice" name="price" type="number" min="1" step="1" inputmode="numeric" required>
+
+                        <label for="productDescription">Description</label>
+                        <textarea id="productDescription" name="description" maxlength="300" rows="3"></textarea>
+
+                        <label for="productImage">Product photo</label>
+                        <input id="productImage" name="image" type="file" accept="image/*">
+                        <small class="field-help">Choose a clear photo. Maximum size: 5 MB. Leave empty to keep the current photo.</small>
+                        <img id="imagePreview" class="image-preview" alt="Selected product photo preview" hidden>
+
+                        <div class="form-actions">
+                            <button id="saveProductButton" class="primary-button" type="submit">Save product</button>
+                            <button id="cancelEditButton" class="secondary-button" type="button" hidden>Cancel edit</button>
+                        </div>
+                    </form>
+                    <p id="productStatus" class="status" role="status" aria-live="polite"></p>
+                </section>
+
+                <section class="panel catalog-panel">
+                    <div class="catalog-heading">
+                        <h2>Shop products</h2>
+                        <span id="productCount" class="count-badge">0</span>
+                    </div>
+                    <p id="emptyCatalog" class="empty-state" hidden>No online products yet. Publish the starter catalog to begin, or add your first product.</p>
+                    <button id="seedCatalogButton" class="secondary-button seed-button" type="button" hidden>Publish starter catalog</button>
+                    <div id="productList" class="product-list"></div>
+                </section>
+            </div>
+        </section>
+    </main>
+    <script type="module" src="admin.js"></script>
+</body>
+</html>

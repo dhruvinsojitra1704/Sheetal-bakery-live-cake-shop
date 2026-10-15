@@ -15,135 +15,14 @@ const WHATSAPP_NUMBER = "917874131575";
    PRODUCTS
 ===================================================== */
 
-const products = [
+let products = window.SHEETAL_DEFAULT_PRODUCTS || [];
 
-    {
-        id: 1,
-        name: "Chocolate Cake",
-        category: "Cakes",
-        price: 450,
-        image: "",
-        description:
-            "Rich chocolate cake with fresh cream and chocolate decoration."
-    },
-
-    {
-        id: 2,
-        name: "Vanilla Cake",
-        category: "Cakes",
-        price: 400,
-        image: "",
-        description:
-            "Soft vanilla cake with fresh cream and colourful decoration."
-    },
-
-    {
-        id: 3,
-        name: "Black Forest Cake",
-        category: "Cakes",
-        price: 500,
-        image: "",
-        description:
-            "Classic black forest cake with chocolate and cherries."
-    },
-
-    {
-        id: 4,
-        name: "Red Velvet Cake",
-        category: "Cakes",
-        price: 550,
-        image: "",
-        description:
-            "Soft red velvet cake with creamy frosting."
-    },
-
-
-    {
-        id: 5,
-        name: "Fresh Bread",
-        category: "Bakery",
-        price: 40,
-        image: "",
-        description:
-            "Fresh and soft bakery bread."
-    },
-
-    {
-        id: 6,
-        name: "Butter Biscuits",
-        category: "Bakery",
-        price: 80,
-        image: "",
-        description:
-            "Crispy and delicious butter biscuits."
-    },
-
-
-    {
-        id: 7,
-        name: "Potato Chips",
-        category: "Snacks",
-        price: 50,
-        image: "",
-        description:
-            "Crispy potato chips for your snack time."
-    },
-
-
-    {
-        id: 8,
-        name: "Pepsi 330 ml",
-        category: "Cold Drinks",
-        price: 40,
-        image: "",
-        description:
-            "Chilled refreshing Pepsi can."
-    },
-
-    {
-        id: 9,
-        name: "Fresh Juice",
-        category: "Cold Drinks",
-        price: 60,
-        image: "",
-        description:
-            "Refreshing fruit juice."
-    },
-
-
-    {
-        id: 10,
-        name: "Grocery Pack",
-        category: "Grocery",
-        price: 120,
-        image: "",
-        description:
-            "Useful grocery products for your daily needs."
-    },
-
-
-    {
-        id: 11,
-        name: "Premium Dry Fruits",
-        category: "Dry Fruits",
-        price: 350,
-        image: "",
-        description:
-            "Premium quality mixed dry fruits."
-    },
-
-
-    {
-        id: 12,
-        name: "Chocolate Box",
-        category: "Chocolates",
-        price: 250,
-        image: "",
-        description:
-            "Delicious assorted chocolate box."
-    }
-
-];
+window.setSheetalStoreProducts = function (nextProducts) {
+    products = Array.isArray(nextProducts) ? nextProducts : [];
+    loadCart();
+    renderProducts();
+    updateCartUI();
+};
 
 
 /* =====================================================
@@ -339,11 +218,11 @@ function createProductCard(product) {
 
             <div
                 class="product-image"
-                onclick="openProductModal(${product.id})">
+                onclick="openProductModal('${escapeHtml(String(product.id))}')">
 
                 ${product.image
                     ? `<img
-                        src="${product.image}"
+                        src="${escapeHtml(product.image)}"
                         alt="${escapeHtml(product.name)}"
                     >`
                     : ""}
@@ -377,7 +256,7 @@ function createProductCard(product) {
 
                     <button
                         class="add-button"
-                        onclick="openProductModal(${product.id})">
+                        onclick="openProductModal('${escapeHtml(String(product.id))}')">
 
                         🛒 Add to Cart
 
@@ -564,7 +443,7 @@ function openProductModal(productId) {
     const product =
         products.find(function (item) {
 
-            return item.id === productId;
+            return String(item.id) === String(productId);
 
         });
 
@@ -1561,13 +1440,14 @@ function sendCustomCakeOrder() {
 
     const name = document.getElementById("customName")?.value.trim() || "";
     const phone = document.getElementById("customPhone")?.value.trim() || "";
-    const flavour = document.getElementById("customFlavour")?.value || "Not specified";
-    const size = document.getElementById("customSize")?.value || "Not specified";
+    const flavour = document.getElementById("cakeType")?.value.trim() || "";
+    const size = document.getElementById("cake-size")?.value.trim() || "";
+    const cakeDate = document.getElementById("cakeDate")?.value || "";
     const message = document.getElementById("customMessage")?.value.trim() || "No special message";
-    const photoInput = document.getElementById("cake-photo");
+    const photoInput = document.getElementById("cakePhoto");
 
-    if (!name || !phone || !flavour || !size) {
-        alert("Please fill all required cake details.");
+    if (!name || !phone || !flavour || !size || !cakeDate) {
+        alert("Please enter your name, phone number, cake flavour, cake weight, and required date.");
         return;
     }
 
@@ -1584,6 +1464,11 @@ function sendCustomCakeOrder() {
             photoInput.files[0].name;
     }
 
+    const dateParts = cakeDate.split("-");
+    const formattedDate = dateParts.length === 3
+        ? `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`
+        : cakeDate;
+
     const whatsappMessage =
 `🎂 *CUSTOM CAKE ORDER*
 
@@ -1592,6 +1477,7 @@ function sendCustomCakeOrder() {
 
 🍰 Cake Flavour: ${flavour}
 ⚖️ Cake Size: ${size}
+📅 Required Date: ${formattedDate}
 
 💬 Cake Message:
 ${message}
@@ -2408,6 +2294,11 @@ function placeOrder(event) {
         ? addressInput.value.trim()
         : "";
 
+    const paymentMethod =
+        document.querySelector('input[name="paymentMethod"]:checked')?.value ||
+        "Cash on Delivery";
+    const isOnlinePayment = paymentMethod === "UPI / Online Payment";
+
     // Validation
     if (!name) {
         alert("Please enter your name.");
@@ -2507,6 +2398,20 @@ function placeOrder(event) {
 
                     </div>
 
+                    <div class="confirm-order-row">
+
+                        <span class="row-icon">
+                            💳
+                        </span>
+
+                        <div>
+                            <strong>Payment Method</strong>
+                            <br>
+                            ${escapeHTML(paymentMethod)}
+                        </div>
+
+                    </div>
+
                 </div>
 
 
@@ -2540,7 +2445,7 @@ function placeOrder(event) {
                         class="confirm-order-yes"
                         id="confirmOrderYes">
 
-                        🎉 Confirm Order
+                        ${isOnlinePayment ? "💳 Pay with Razorpay" : "🎉 Confirm Order"}
 
                     </button>
 
@@ -2587,6 +2492,10 @@ function placeOrder(event) {
 
             overlay.remove();
 
+            if (isOnlinePayment) {
+                startRazorpayPayment();
+                return;
+            }
 
             // WhatsApp message
             let message =
@@ -2600,7 +2509,7 @@ function placeOrder(event) {
             message += "🧁 *ORDER ITEMS:*\n";
 
 
-           cart.forEach(function(item) {
+     cart.forEach(function(item) {
 
     const quantity =
         Number(item.quantity) || 1;
@@ -2614,16 +2523,15 @@ function placeOrder(event) {
         " × " +
         quantity +
         " = ₹" +
-        (quantity * price) +
+        (price * quantity) +
         "\n";
-
 });
-
             message +=
                 "\n💰 *TOTAL AMOUNT: ₹" +
                 total +
                 "*" +
-                "\n💵 Payment: Cash on Delivery" +
+                "\n💵 Payment: " +
+                paymentMethod +
                 "\n\n🙏 Thank you for ordering!" +
                 "\n*SHEETAL BAKERY & LIVE CAKE SHOP* ❤️";
 

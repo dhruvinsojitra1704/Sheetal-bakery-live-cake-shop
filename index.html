@@ -38,6 +38,7 @@
                 src="images/logo.jpeg"
                 alt="SHEETAL BAKERY Logo"
                 class="logo"
+                onerror="this.onerror=null;this.src='logo.jpeg'"
             >
 
             <div class="logo-text">
@@ -192,7 +193,7 @@
         <img
             src="images/home.jpeg"
             alt="Fresh Chocolate Cake"
-            onerror="this.style.display='none'"
+            onerror="this.onerror=null;this.src='home.jpeg'"
         >
 
     </div>
@@ -1117,6 +1118,11 @@
 
     <div class="success-modal">
 
+        <div class="success-kicker">
+            <span aria-hidden="true">✦</span>
+            ORDER CONFIRMED
+            <span aria-hidden="true">✦</span>
+        </div>
 
         <div class="success-icon">
             ✓
@@ -1168,79 +1174,6 @@
 
         </button>
 
-
-    </div>
-
-</div>
-
-<!-- =====================================================
-     CUSTOM ORDER CONFIRMATION POPUP
-===================================================== -->
-
-<div id="orderConfirmModal" class="order-confirm-overlay">
-
-    <div class="order-confirm-box">
-
-        <button type="button"
-                class="order-close-btn"
-                onclick="closeOrderConfirm()">
-            ×
-        </button>
-
-        <div class="order-success-icon">
-            🎂
-        </div>
-
-        <h2>Confirm Your Order</h2>
-
-        <p class="order-confirm-subtitle">
-            Please check your order details
-        </p>
-
-        <div class="order-details-card">
-
-            <div class="order-detail-row">
-                <span>👤 Customer</span>
-                <strong id="confirmCustomerName">-</strong>
-            </div>
-
-            <div class="order-detail-row">
-                <span>📞 Mobile</span>
-                <strong id="confirmCustomerMobile">-</strong>
-            </div>
-
-            <div class="order-detail-row">
-                <span>📍 Address</span>
-                <strong id="confirmCustomerAddress">-</strong>
-            </div>
-
-            <div class="order-detail-row total-row">
-                <span>💰 Total Amount</span>
-                <strong id="confirmOrderTotal">₹0</strong>
-            </div>
-
-        </div>
-
-        <div class="order-confirm-note">
-            🛍️ Your order will be sent to
-            <strong>SHEETAL BAKERY</strong> on WhatsApp.
-        </div>
-
-        <div class="order-confirm-actions">
-
-            <button type="button"
-                    class="order-cancel-btn"
-                    onclick="closeOrderConfirm()">
-                ✕ Cancel
-            </button>
-
-            <button type="button"
-                    class="order-confirm-btn"
-                    onclick="confirmAndSendOrder()">
-                ✓ Confirm Order
-            </button>
-
-        </div>
 
     </div>
 
@@ -1389,15 +1322,11 @@ With Love
 
 </div>
 
+</div>
+
 <div class="footer-bottom">
 
-
-
-©️2026 SHEETAL BAKERY & LIVE
-
-CAKE SHOP.
-
-All Rights Reserved.
+    © 2026 SHEETAL BAKERY &amp; LIVE CAKE SHOP. All Rights Reserved.
 
 </div>
 
@@ -1407,7 +1336,9 @@ All Rights Reserved.
 <!-- ================= END RETURN POLICY ================= -->
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="products-defaults.js"></script>
 <script src="script.js"></script>
+<script type="module" src="firebase-store.js"></script>
 
 </body>
 

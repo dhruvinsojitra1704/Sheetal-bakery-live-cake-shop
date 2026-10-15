@@ -1,0 +1,38 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isShopAdmin() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email == 'REPLACE_WITH_ADMIN_EMAIL';
+    }
+
+    function hasValidProduct() {
+      return request.resource.data.keys().hasAll([
+          'id', 'name', 'category', 'price', 'image', 'description'
+        ])
+        && request.resource.data.keys().hasOnly([
+          'id', 'name', 'category', 'price', 'image', 'description'
+        ])
+        && (request.resource.data.id is int
+          || request.resource.data.id is string)
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.name.size() <= 80
+        && request.resource.data.category is string
+        && (request.resource.data.price is int
+          || request.resource.data.price is float)
+        && request.resource.data.price > 0
+        && request.resource.data.image is string
+        && request.resource.data.description is string
+        && request.resource.data.description.size() <= 300;
+    }
+
+    match /products/{productId} {
+      allow read: if true;
+      allow create, update: if isShopAdmin() && hasValidProduct();
+      allow delete: if isShopAdmin();
+    }
+  }
+}

@@ -1405,6 +1405,15 @@ img {
   font-size: 11px;
 }
 
+.footer-bottom {
+  flex-basis: 100%;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ddd;
+  font-size: 12px;
+  text-align: center;
+}
+
 /* =====================================================
    NO PRODUCTS
 ===================================================== */
@@ -4830,4 +4839,158 @@ header {
         width: 100%;
     }
 
+}
+
+/* Bakery-themed order confirmation */
+#successOverlay .success-modal {
+    max-width: 450px;
+    max-height: calc(100vh - 32px);
+    padding: 38px 34px 30px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border: 1px solid rgba(196, 133, 75, 0.25);
+    border-radius: 28px;
+    background:
+        radial-gradient(ellipse at 50% -10%, rgba(255, 224, 174, 0.72), transparent 48%),
+        linear-gradient(160deg, #fffdf9 0%, #fff8ef 100%);
+    box-shadow: 0 28px 90px rgba(37, 21, 13, 0.34);
+    animation: orderSuccessEnter 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+#successOverlay .success-kicker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 19px;
+    color: #a66c36;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+}
+
+#successOverlay .success-kicker span {
+    color: #d5984d;
+    font-size: 14px;
+}
+
+#successOverlay .success-icon {
+    position: relative;
+    width: 82px;
+    height: 82px;
+    margin: 0 auto 21px;
+    border: 6px solid #fffdf8;
+    background: linear-gradient(145deg, #77bd74, #31945a);
+    box-shadow: 0 0 0 1px rgba(49, 148, 90, 0.16), 0 10px 25px rgba(49, 148, 90, 0.24);
+    font-size: 43px;
+    animation: orderSuccessPop 0.65s 0.12s cubic-bezier(0.2, 0.8, 0.2, 1.35) both;
+}
+
+#successOverlay .success-modal h2 {
+    margin: 0 0 10px;
+    color: #563629;
+    font-size: clamp(25px, 6vw, 31px);
+    line-height: 1.2;
+}
+
+#successOverlay .success-modal p {
+    margin: 0 0 5px;
+    color: #827166;
+    font-size: 15px;
+}
+
+#successOverlay .success-modal > strong {
+    display: block;
+    color: #72503e;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+#successOverlay .order-id-box {
+    margin: 23px 0 18px;
+    padding: 14px 18px;
+    border: 1px dashed #d9b98f;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.72);
+}
+
+#successOverlay .order-id-box span {
+    color: #a1856e;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+}
+
+#successOverlay .order-id-box strong {
+    color: #8d572b;
+    font-size: 21px;
+    letter-spacing: 0.12em;
+}
+
+#successOverlay .whatsapp-button,
+#successOverlay .home-button {
+    min-height: 48px;
+    border-radius: 13px;
+    font-weight: 700;
+    transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+#successOverlay .whatsapp-button {
+    box-shadow: 0 8px 18px rgba(37, 211, 102, 0.2);
+}
+
+#successOverlay .home-button {
+    margin-top: 11px;
+    border-color: #e8d9c9;
+    background: transparent;
+}
+
+#successOverlay .whatsapp-button:hover,
+#successOverlay .home-button:hover {
+    transform: translateY(-2px);
+}
+
+@keyframes orderSuccessEnter {
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes orderSuccessPop {
+    from {
+        opacity: 0;
+        transform: scale(0.65) rotate(-12deg);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+    }
+}
+
+@media (max-width: 480px) {
+    #successOverlay .success-modal {
+        padding: 32px 22px 24px;
+        border-radius: 23px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #successOverlay .success-modal,
+    #successOverlay .success-icon {
+        animation: none;
+    }
+
+    #successOverlay .whatsapp-button,
+    #successOverlay .home-button {
+        transition: none;
+    }
 }
