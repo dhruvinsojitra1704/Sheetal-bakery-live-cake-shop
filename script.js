@@ -2600,25 +2600,24 @@ function placeOrder(event) {
             message += "🧁 *ORDER ITEMS:*\n";
 
 
-            cart.forEach(function(item) {
+           cart.forEach(function(item) {
 
-                const quantity =
-                    Number(item.quantity) || 1;
+    const quantity =
+        Number(item.quantity) || 1;
 
-                const price =
-                    Number(item.price) || 0;
+    const price =
+        Number(item.unitPrice) || 0;
 
-                message +=
-                    "• " +
-                    item.name +
-                    " × " +
-                    quantity +
-                    " = ₹" +
-                    (quantity * price) +
-                    "\n";
+    message +=
+        "• " +
+        item.name +
+        " × " +
+        quantity +
+        " = ₹" +
+        (quantity * price) +
+        "\n";
 
-            });
-
+});
 
             message +=
                 "\n💰 *TOTAL AMOUNT: ₹" +
