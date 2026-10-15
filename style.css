@@ -4994,3 +4994,52 @@ header {
         transition: none;
     }
 }
+
+/* Keep review links readable and use a real maps-style marker without icon fonts. */
+#reviews .google-review-icon {
+    border: 1px solid #e5eaf0;
+    background: #fff;
+}
+
+#reviews .google-maps-mark {
+    display: block;
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+#reviews .google-review-btn,
+#reviews .google-write-btn,
+#reviews .google-review-btn:link,
+#reviews .google-review-btn:visited,
+#reviews .google-review-btn:hover,
+#reviews .google-review-btn:active,
+#reviews .google-review-btn:focus,
+#reviews .google-write-btn:link,
+#reviews .google-write-btn:visited,
+#reviews .google-write-btn:hover,
+#reviews .google-write-btn:active,
+#reviews .google-write-btn:focus {
+    border: 2px solid #000;
+    background: #000;
+    color: #fff;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.18);
+    transition: none;
+}
+
+#reviews .google-review-btn:focus-visible,
+#reviews .google-write-btn:focus-visible {
+    outline: 2px solid #fbbc04;
+    outline-offset: 3px;
+}
+
+#reviews .review-link-icon {
+    display: block;
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+}
+
+#reviews .maps-pin-icon {
+    color: #fbbc04;
+}

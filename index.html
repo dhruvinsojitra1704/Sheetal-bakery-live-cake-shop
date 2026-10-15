@@ -126,10 +126,10 @@
         <span>Reviews</span>
     </a>
 
-    <a href="Cake Manual 1.pdf"
+    <a href="Cake%20Manual%201.pdf"
        class="nav-btn"
-       target="_blank"
-       rel="noopener">
+       type="application/pdf"
+       aria-label="Open cake catalog PDF">
         <span class="nav-icon">🍰</span>
         <span>Cake Catalog</span>
     </a>
@@ -1191,8 +1191,14 @@
 
         <div class="reviews-card">
 
-            <div class="google-review-icon">
-                <i class="fa-brands fa-google"></i>
+            <div class="google-review-icon" aria-label="Google Maps location">
+                <img
+                    class="google-maps-mark"
+                    src="https://www.gstatic.com/images/branding/product/1x/maps_48dp.png"
+                    alt="Google Maps"
+                    width="48"
+                    height="48"
+                >
             </div>
 
             <div class="reviews-stars">
@@ -1211,24 +1217,15 @@
             </p>
 
             <div class="reviews-buttons">
-
-                <a
-                    href="https://maps.app.goo.gl/myKn36fq3SijcxV27"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="google-review-btn">
-
-                    <i class="fa-brands fa-google"></i>
-                    Read Google Reviews
-                </a>
-
                 <a
                     href="https://maps.app.goo.gl/myKn36fq3SijcxV27"
                     target="_blank"
                     rel="noopener noreferrer"
                     class="google-write-btn">
 
-                    <i class="fa-solid fa-pen"></i>
+                    <svg class="review-link-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M4 16.5V20h3.5L18.8 8.7l-3.5-3.5L4 16.5Zm17.7-10.2a.93.93 0 0 0 0-1.3l-2.7-2.7a.93.93 0 0 0-1.3 0l-1.7 1.7 3.5 3.5 2.2-1.2Z" fill="currentColor"/>
+                    </svg>
                     Write a Review
                 </a>
 
