@@ -130,6 +130,8 @@ img {
 
   height: 58px;
 
+  flex: 0 0 auto;
+
   object-fit: contain;
 }
 
@@ -3429,6 +3431,8 @@ header {
     width: 55px;
     height: 55px;
 
+    flex: 0 0 auto;
+
     object-fit: contain;
 
     display: block;
@@ -5042,4 +5046,68 @@ header {
 
 #reviews .maps-pin-icon {
     color: #fbbc04;
+}
+/* =========================
+   TOP BAR CONTACT
+========================= */
+
+.top-contact {
+    position: relative;
+    display: inline-block;
+}
+
+.contact-icon-btn {
+    border: none;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 8px 10px;
+}
+
+.contact-icon-btn i {
+    font-size: 18px;
+}
+
+.contact-numbers {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 190px;
+    background: #ffffff;
+    border: 1px solid #eaded7;
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+}
+
+.contact-numbers.show {
+    display: block;
+}
+
+.contact-numbers a {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 11px 10px;
+    color: #252525;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.contact-numbers a:hover {
+    background: #f6e3d8;
+    color: #b9573a;
+}
+
+.contact-numbers a i {
+    color: #d97757;
 }

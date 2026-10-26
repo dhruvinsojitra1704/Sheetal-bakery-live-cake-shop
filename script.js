@@ -1436,7 +1436,7 @@ function setupCustomCakeForm() {
 }
 
 
-function sendCustomCakeOrder() {
+async function sendCustomCakeOrder() {
 
     const name = document.getElementById("customName")?.value.trim() || "";
     const phone = document.getElementById("customPhone")?.value.trim() || "";
@@ -1445,6 +1445,7 @@ function sendCustomCakeOrder() {
     const cakeDate = document.getElementById("cakeDate")?.value || "";
     const message = document.getElementById("customMessage")?.value.trim() || "No special message";
     const photoInput = document.getElementById("cakePhoto");
+    const customerPhotoInput = document.getElementById("customerPhoto");
 
     if (!name || !phone || !flavour || !size || !cakeDate) {
         alert("Please enter your name, phone number, cake flavour, cake weight, and required date.");
@@ -1456,20 +1457,45 @@ function sendCustomCakeOrder() {
         return;
     }
 
-    let photoText = "No reference photo selected.";
+    const customerPhoto =
+        flavour === "Custom Photo Cake" && customerPhotoInput?.files.length
+            ? customerPhotoInput.files[0]
+            : null;
+    const referencePhoto = photoInput?.files.length
+        ? photoInput.files[0]
+        : null;
 
-    if (photoInput && photoInput.files.length > 0) {
-        photoText =
-            "Reference cake photo selected: " +
-            photoInput.files[0].name;
+    if (flavour === "Custom Photo Cake" && !customerPhoto) {
+        alert("Please upload your photo for Custom Photo Cake.");
+        customerPhotoInput?.focus();
+        return;
     }
+
+    const selectedPhotos = [customerPhoto, referencePhoto].filter(Boolean);
+
+    if (selectedPhotos.some(file => !file.type.startsWith("image/"))) {
+        alert("Please select valid image files for the cake photos.");
+        return;
+    }
+
+    if (customerPhoto && customerPhoto.size > 5 * 1024 * 1024) {
+        alert("Your photo should be less than 5 MB.");
+        return;
+    }
+
+    const shareFiles = selectedPhotos;
+    const canSharePhotos =
+        shareFiles.length > 0 &&
+        typeof navigator.canShare === "function" &&
+        typeof navigator.share === "function" &&
+        navigator.canShare({ files: shareFiles });
 
     const dateParts = cakeDate.split("-");
     const formattedDate = dateParts.length === 3
         ? `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`
         : cakeDate;
 
-    const whatsappMessage =
+    const buildWhatsAppMessage = photosCanBeShared =>
 `🎂 *CUSTOM CAKE ORDER*
 
 👤 Customer Name: ${name}
@@ -1483,15 +1509,58 @@ function sendCustomCakeOrder() {
 ${message}
 
 📸 Reference Photo:
-${photoText}
+${referencePhoto
+        ? photosCanBeShared
+            ? "Ready to attach via the share menu."
+            : "Selected on the website; please attach it manually in WhatsApp."
+        : "No reference photo selected."}
+${customerPhoto
+        ? `\n👤 Customer Photo:\n${photosCanBeShared
+            ? "Ready to attach via the share menu."
+            : "Selected on the website; please attach it manually in WhatsApp."}`
+        : ""}
+${selectedPhotos.length > 0 && !photosCanBeShared
+        ? "\n⚠️ This browser cannot attach photos automatically. Please attach the selected photo(s) in WhatsApp before sending."
+        : ""}
 
 Please confirm the price and availability.
 
 Thank you,
 SHEETAL BAKERY & LIVE CAKE SHOP`;
 
+    let shareFailed = false;
+
+    if (canSharePhotos) {
+        try {
+            await navigator.share({
+                title: "Custom cake order | SHEETAL BAKERY",
+                text: buildWhatsAppMessage(true),
+                files: shareFiles
+            });
+            return;
+        } catch (error) {
+            if (
+                error &&
+                typeof error === "object" &&
+                "name" in error &&
+                error.name === "AbortError"
+            ) {
+                return;
+            }
+
+            console.error("Unable to share custom cake photos:", error);
+            alert("Photos could not be attached automatically. WhatsApp will open; please attach the selected photo(s) manually.");
+            shareFailed = true;
+        }
+    }
+
     const whatsappURL =
-        `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
+        `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWhatsAppMessage(false))}`;
+
+    if (shareFailed) {
+        window.location.assign(whatsappURL);
+        return;
+    }
 
     window.open(whatsappURL, "_blank");
 }
@@ -2618,4 +2687,25 @@ cart.forEach(function(item) {
         (quantity * price) +
         "\n";
 
+});
+function toggleContactNumbers() {
+    const contactNumbers = document.getElementById("contactNumbers");
+
+    if (contactNumbers) {
+        contactNumbers.classList.toggle("show");
+    }
+}
+
+// Contact box બહાર click થાય ત્યારે close
+document.addEventListener("click", function (event) {
+    const contactBox = document.querySelector(".top-contact");
+    const contactNumbers = document.getElementById("contactNumbers");
+
+    if (
+        contactBox &&
+        contactNumbers &&
+        !contactBox.contains(event.target)
+    ) {
+        contactNumbers.classList.remove("show");
+    }
 });
