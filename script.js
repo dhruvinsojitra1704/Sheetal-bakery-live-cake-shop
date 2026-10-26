@@ -1436,7 +1436,7 @@ function setupCustomCakeForm() {
 }
 
 
-async function sendCustomCakeOrder() {
+function sendCustomCakeOrder() {
 
     const name = document.getElementById("customName")?.value.trim() || "";
     const phone = document.getElementById("customPhone")?.value.trim() || "";
@@ -1483,19 +1483,12 @@ async function sendCustomCakeOrder() {
         return;
     }
 
-    const shareFiles = selectedPhotos;
-    const canSharePhotos =
-        shareFiles.length > 0 &&
-        typeof navigator.canShare === "function" &&
-        typeof navigator.share === "function" &&
-        navigator.canShare({ files: shareFiles });
-
     const dateParts = cakeDate.split("-");
     const formattedDate = dateParts.length === 3
         ? `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`
         : cakeDate;
 
-    const buildWhatsAppMessage = photosCanBeShared =>
+    const whatsappMessage =
 `🎂 *CUSTOM CAKE ORDER*
 
 👤 Customer Name: ${name}
@@ -1509,58 +1502,17 @@ async function sendCustomCakeOrder() {
 ${message}
 
 📸 Reference Photo:
-${referencePhoto
-        ? photosCanBeShared
-            ? "Ready to attach via the share menu."
-            : "Selected on the website; please attach it manually in WhatsApp."
-        : "No reference photo selected."}
-${customerPhoto
-        ? `\n👤 Customer Photo:\n${photosCanBeShared
-            ? "Ready to attach via the share menu."
-            : "Selected on the website; please attach it manually in WhatsApp."}`
-        : ""}
-${selectedPhotos.length > 0 && !photosCanBeShared
-        ? "\n⚠️ This browser cannot attach photos automatically. Please attach the selected photo(s) in WhatsApp before sending."
-        : ""}
+${referencePhoto ? "Selected. Please attach it in WhatsApp." : "No reference photo selected."}
+${customerPhoto ? "\n👤 Customer Photo:\nSelected. Please attach it in WhatsApp." : ""}
+${selectedPhotos.length > 0 ? "\n⚠️ Attach the selected photo(s) in WhatsApp, then press Send." : ""}
 
 Please confirm the price and availability.
 
 Thank you,
 SHEETAL BAKERY & LIVE CAKE SHOP`;
 
-    let shareFailed = false;
-
-    if (canSharePhotos) {
-        try {
-            await navigator.share({
-                title: "Custom cake order | SHEETAL BAKERY",
-                text: buildWhatsAppMessage(true),
-                files: shareFiles
-            });
-            return;
-        } catch (error) {
-            if (
-                error &&
-                typeof error === "object" &&
-                "name" in error &&
-                error.name === "AbortError"
-            ) {
-                return;
-            }
-
-            console.error("Unable to share custom cake photos:", error);
-            alert("Photos could not be attached automatically. WhatsApp will open; please attach the selected photo(s) manually.");
-            shareFailed = true;
-        }
-    }
-
     const whatsappURL =
-        `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWhatsAppMessage(false))}`;
-
-    if (shareFailed) {
-        window.location.assign(whatsappURL);
-        return;
-    }
+        `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
 
     window.open(whatsappURL, "_blank");
 }
