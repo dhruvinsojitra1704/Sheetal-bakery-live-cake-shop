@@ -45,6 +45,13 @@ let customerData = null;
 
 let lastOrderMessage = "";
 
+let upiQrTimer = null;
+let customCakePaymentDetails = null;
+
+const UPI_ID = "gpay-12204499978@okbizaxis";
+const UPI_MERCHANT_NAME = "SHEETAL BAKERY & LIVE CAKE SHOP";
+const UPI_QR_LIFETIME_SECONDS = 180;
+
 
 
 /* =====================================================
@@ -1285,10 +1292,126 @@ function renderReview() {
     total.textContent =
         `₹${getTotal()}`;
 
+    renderUpiPayment();
+
+}
+
+function renderUpiPayment() {
+    const section = document.getElementById("upiPaymentSection");
+    const confirmButton = document.getElementById("placeOrderBtn");
+    const isUpiPayment =
+        customerData?.paymentMethod === "UPI / Online Payment";
+
+    if (section) {
+        section.hidden = !isUpiPayment;
+    }
+
+    if (confirmButton) {
+        confirmButton.textContent = isUpiPayment
+            ? "I have paid — Continue"
+            : "🔒 Place Order";
+    }
+
+    if (upiQrTimer) {
+        clearInterval(upiQrTimer);
+        upiQrTimer = null;
+    }
+
+    if (isUpiPayment) {
+        generateUpiPaymentQr(
+            getTotal(),
+            {
+                qr: "upiQrCode",
+                amount: "upiPaymentAmount",
+                countdown: "upiQrCountdown",
+                appLink: "upiAppLink"
+            },
+            "Sheetal Bakery Order"
+        );
+    }
+}
+
+function generateUpiPaymentQr(amountValue, elements, transactionNote) {
+    const qrContainer = document.getElementById(elements.qr);
+    const amountElement = document.getElementById(elements.amount);
+    const countdownElement = document.getElementById(elements.countdown);
+    const appLink = document.getElementById(elements.appLink);
+
+    if (!qrContainer || !amountElement || !countdownElement || !appLink) {
+        return;
+    }
+
+    if (upiQrTimer) {
+        clearInterval(upiQrTimer);
+        upiQrTimer = null;
+    }
+
+    const amount = Number(amountValue).toFixed(2);
+    const paymentReference = `SB${Date.now()}`;
+    const paymentUrl = `upi://pay?${new URLSearchParams({
+        pa: UPI_ID,
+        pn: UPI_MERCHANT_NAME,
+        tr: paymentReference,
+        am: amount,
+        cu: "INR",
+        tn: transactionNote
+    }).toString()}`;
+
+    amountElement.textContent = `Amount: ₹${amount}`;
+    appLink.href = paymentUrl;
+    appLink.target = "_blank";
+    appLink.rel = "noopener noreferrer";
+    qrContainer.replaceChildren();
+
+    if (typeof QRCode === "undefined") {
+        console.error("UPI QR code library is unavailable.");
+        qrContainer.textContent =
+            "QR code could not be loaded. Please use Open UPI app.";
+    } else {
+        try {
+            new QRCode(qrContainer, {
+                text: paymentUrl,
+                width: 220,
+                height: 220,
+                correctLevel: QRCode.CorrectLevel.M
+            });
+        } catch (error) {
+            console.error("Unable to generate UPI QR code:", error);
+            qrContainer.textContent =
+                "QR code could not be generated. Please use Open UPI app.";
+        }
+    }
+
+    const expiresAt = Date.now() + UPI_QR_LIFETIME_SECONDS * 1000;
+    const updateCountdown = function () {
+        const remainingSeconds =
+            Math.ceil((expiresAt - Date.now()) / 1000);
+
+        if (remainingSeconds <= 0) {
+            clearInterval(upiQrTimer);
+            upiQrTimer = null;
+            generateUpiPaymentQr(amountValue, elements, transactionNote);
+            return;
+        }
+
+        const minutes = Math.floor(remainingSeconds / 60);
+        const seconds = String(remainingSeconds % 60).padStart(2, "0");
+
+        countdownElement.textContent =
+            `New QR in ${minutes}:${seconds}`;
+    };
+
+    updateCountdown();
+    upiQrTimer = setInterval(updateCountdown, 1000);
 }
 
 
 function closeReview() {
+
+    if (upiQrTimer) {
+        clearInterval(upiQrTimer);
+        upiQrTimer = null;
+    }
 
     document
         .getElementById("reviewOverlay")
@@ -1433,6 +1556,14 @@ function setupCustomCakeForm() {
         }
     );
 
+    document
+        .getElementById("customCakeGenerateQr")
+        ?.addEventListener("click", generateCustomCakePaymentQr);
+
+    document
+        .getElementById("customCakePaidButton")
+        ?.addEventListener("click", sendCustomCakePaidOrder);
+
 }
 
 
@@ -1444,6 +1575,9 @@ function sendCustomCakeOrder() {
     const size = document.getElementById("cake-size")?.value.trim() || "";
     const cakeDate = document.getElementById("cakeDate")?.value || "";
     const message = document.getElementById("customMessage")?.value.trim() || "No special message";
+    const paymentMethod =
+        document.querySelector('input[name="customPaymentMethod"]:checked')?.value ||
+        "Cash on Delivery";
     const photoInput = document.getElementById("cakePhoto");
     const customerPhotoInput = document.getElementById("customerPhoto");
 
@@ -1488,33 +1622,139 @@ function sendCustomCakeOrder() {
         ? `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`
         : cakeDate;
 
-    const whatsappMessage =
-`🎂 *CUSTOM CAKE ORDER*
+    customCakePaymentDetails = {
+        name,
+        phone,
+        flavour,
+        size,
+        formattedDate,
+        message,
+        paymentMethod,
+        hasCustomerPhoto: Boolean(customerPhoto),
+        hasReferencePhoto: Boolean(referencePhoto)
+    };
 
-👤 Customer Name: ${name}
-📱 Mobile Number: ${phone}
-
-🍰 Cake Flavour: ${flavour}
-⚖️ Cake Size: ${size}
-📅 Required Date: ${formattedDate}
-
-💬 Cake Message:
-${message}
-
-📸 Reference Photo:
-${referencePhoto ? "Selected. Please attach it in WhatsApp." : "No reference photo selected."}
-${customerPhoto ? "\n👤 Customer Photo:\nSelected. Please attach it in WhatsApp." : ""}
-${selectedPhotos.length > 0 ? "\n⚠️ Attach the selected photo(s) in WhatsApp, then press Send." : ""}
-
-Please confirm the price and availability.
-
-Thank you,
-SHEETAL BAKERY & LIVE CAKE SHOP`;
+    const whatsappMessage = createCustomCakeWhatsAppMessage(
+        customCakePaymentDetails,
+        false
+    );
 
     const whatsappURL =
         `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
 
     window.open(whatsappURL, "_blank");
+
+    const paymentSection =
+        document.getElementById("customCakePaymentSection");
+
+    if (paymentSection) {
+        paymentSection.hidden = paymentMethod !== "UPI / Online Payment";
+
+        if (paymentMethod === "UPI / Online Payment") {
+            paymentSection.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+    }
+}
+
+function createCustomCakeWhatsAppMessage(details, paymentReported) {
+    const photoInstructions =
+        `${details.hasReferencePhoto ? "\n📸 Reference Photo: Selected. Please attach it in WhatsApp." : "\n📸 Reference Photo: None"}`
+        + `${details.hasCustomerPhoto ? "\n👤 Customer Photo: Selected. Please attach it in WhatsApp." : ""}`
+        + `${details.hasReferencePhoto || details.hasCustomerPhoto
+            ? "\n⚠️ Attach the selected photo(s) in WhatsApp, then press Send."
+            : ""}`;
+
+    const paymentDetails = paymentReported
+        ? `\n💰 Quoted Amount: ₹${paymentReported.amount}\n💵 Payment Method: UPI / Online Payment\n⚠️ Customer reports payment; please verify it in your UPI account before confirming the order.`
+        : `\n💳 Payment Method: ${details.paymentMethod}`;
+    const nextStep = paymentReported
+        ? "Please verify payment and confirm my custom cake order."
+        : details.paymentMethod === "UPI / Online Payment"
+            ? "Please confirm the final price and availability. I will pay online after you share the quote."
+            : "Please confirm the price and availability.";
+
+    return `🎂 *CUSTOM CAKE ORDER*
+
+👤 Customer Name: ${details.name}
+📱 Mobile Number: ${details.phone}
+
+🍰 Cake Flavour: ${details.flavour}
+⚖️ Cake Size: ${details.size}
+📅 Required Date: ${details.formattedDate}
+
+💬 Cake Message:
+${details.message}
+${photoInstructions}
+${paymentDetails}
+
+${nextStep}
+
+Thank you,
+SHEETAL BAKERY & LIVE CAKE SHOP`;
+}
+
+function generateCustomCakePaymentQr() {
+    const amountInput =
+        document.getElementById("customCakeQuotedAmount");
+    const amount = Number(amountInput?.value);
+
+    if (!customCakePaymentDetails ||
+        customCakePaymentDetails.paymentMethod !== "UPI / Online Payment") {
+        alert("Please submit the custom cake request with UPI selected first.");
+        return;
+    }
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+        alert("Enter the exact price confirmed by the bakery.");
+        amountInput?.focus();
+        return;
+    }
+
+    const paymentSection =
+        document.getElementById("customCakeQrPayment");
+
+    if (paymentSection) {
+        paymentSection.hidden = false;
+    }
+
+    generateUpiPaymentQr(
+        amount,
+        {
+            qr: "customCakeQrCode",
+            amount: "customCakePaymentAmount",
+            countdown: "customCakeQrCountdown",
+            appLink: "customCakeUpiAppLink"
+        },
+        "Sheetal Custom Cake"
+    );
+}
+
+function sendCustomCakePaidOrder() {
+    const amount = Number(
+        document.getElementById("customCakeQuotedAmount")?.value
+    );
+
+    if (!customCakePaymentDetails ||
+        customCakePaymentDetails.paymentMethod !== "UPI / Online Payment" ||
+        !Number.isFinite(amount) ||
+        amount <= 0
+    ) {
+        alert("Generate the UPI QR with the bakery-confirmed amount first.");
+        return;
+    }
+
+    const whatsappMessage = createCustomCakeWhatsAppMessage(
+        customCakePaymentDetails,
+        { amount: amount.toFixed(2) }
+    );
+    const whatsappURL =
+        `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
+
+    window.open(whatsappURL, "_blank");
+    alert(
+        "Your custom cake order request is ready. Please send it on WhatsApp; "
+        + "the shop will verify your UPI payment manually."
+    );
 }
 
 
@@ -1594,162 +1834,6 @@ document.addEventListener(
 
     }
 );
-async function startRazorpayPayment() {
-
-    if (typeof cart === "undefined" || cart.length === 0) {
-        alert("Your cart is empty.");
-        return;
-    }
-
-    const name =
-        document.getElementById("customerName")?.value.trim();
-
-    const phone =
-        document.getElementById("customerPhone")?.value.trim();
-
-    const address =
-        document.getElementById("customerAddress")?.value.trim();
-
-    if (!name || !phone || !address) {
-        alert("Please fill Customer Name, Mobile Number and Address.");
-        return;
-    }
-
-    const total = getTotal();
-
-    if (total <= 0) {
-        alert("Invalid order amount.");
-        return;
-    }
-
-    try {
-
-        const response = await fetch(
-            "http://localhost:5000/create-order",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    amount: total * 100
-                })
-            }
-        );
-
-        const data = await response.json();
-
-        if (!data.success) {
-            alert("Unable to create payment order.");
-            return;
-        }
-
-        const options = {
-
-            key: "rzp_test_TmBmm0ABWHZ4UD",
-
-            amount: data.order.amount,
-
-            currency: "INR",
-
-            name: "SHEETAL BAKERY & LIVE CAKE SHOP",
-
-            description: "Bakery Order Payment",
-
-            order_id: data.order.id,
-
-            prefill: {
-                name: name,
-                contact: phone
-            },
-
-            theme: {
-                color: "#8b5e4b"
-            },
-
-            handler: async function (paymentResponse) {
-
-                try {
-
-                    const verifyResponse = await fetch(
-                        "http://localhost:5000/verify-payment",
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({
-                                razorpay_order_id:
-                                    paymentResponse.razorpay_order_id,
-                                razorpay_payment_id:
-                                    paymentResponse.razorpay_payment_id,
-                                razorpay_signature:
-                                    paymentResponse.razorpay_signature
-                            })
-                        }
-                    );
-
-                    const result = await verifyResponse.json();
-
-                    if (result && result.success) {
-
-                        alert(
-                            "✅ Payment Successful!\n\n" +
-                            "Payment ID: " +
-                            paymentResponse.razorpay_payment_id +
-                            "\n\nYour order has been confirmed."
-                        );
-
-                        console.log("Payment Verified:", result);
-
-                    } else {
-
-                        alert(
-                            "❌ Payment verification failed.\n\n" +
-                            "Please contact SHEETAL BAKERY."
-                        );
-
-                        console.error("Verification failed:", result);
-                    }
-
-                } catch (error) {
-
-                    console.error("Verification Error:", error);
-
-                    alert(
-                        "Payment was completed, but verification could not be completed.\n" +
-                        "Please contact the shop before making another payment."
-                    );
-                }
-            },
-
-            modal: {
-                ondismiss: function () {
-                    console.log("Payment window closed.");
-                }
-            }
-        };
-
-        if (!window.Razorpay) {
-            alert("Payment gateway is unavailable right now.");
-            return;
-        }
-
-        const razorpayCheckout =
-            new window.Razorpay(options);
-
-        razorpayCheckout.open();
-
-    } catch (error) {
-
-        console.error("Payment Error:", error);
-
-        alert(
-            "Payment system could not connect.\n" +
-            "Please try again."
-        );
-    }
-}
 /* =========================
    CAKE PHOTO PREVIEW
 ========================= */
@@ -2318,7 +2402,6 @@ function placeOrder(event) {
     const paymentMethod =
         document.querySelector('input[name="paymentMethod"]:checked')?.value ||
         "Cash on Delivery";
-    const isOnlinePayment = paymentMethod === "UPI / Online Payment";
 
     // Validation
     if (!name) {
@@ -2466,7 +2549,9 @@ function placeOrder(event) {
                         class="confirm-order-yes"
                         id="confirmOrderYes">
 
-                        ${isOnlinePayment ? "💳 Pay with Razorpay" : "🎉 Confirm Order"}
+                        ${paymentMethod === "UPI / Online Payment"
+                            ? "I've paid — Send order"
+                            : "🎉 Confirm Order"}
 
                     </button>
 
@@ -2513,11 +2598,6 @@ function placeOrder(event) {
 
             overlay.remove();
 
-            if (isOnlinePayment) {
-                startRazorpayPayment();
-                return;
-            }
-
             // WhatsApp message
             let message =
                 "🎂 *SHEETAL BAKERY & LIVE CAKE SHOP*\n\n" +
@@ -2553,6 +2633,9 @@ function placeOrder(event) {
                 "*" +
                 "\n💵 Payment: " +
                 paymentMethod +
+                (paymentMethod === "UPI / Online Payment"
+                    ? "\n⚠️ Customer reports UPI payment. Please verify the payment in your UPI account before confirming the order."
+                    : "") +
                 "\n\n🙏 Thank you for ordering!" +
                 "\n*SHEETAL BAKERY & LIVE CAKE SHOP* ❤️";
 
@@ -2570,10 +2653,9 @@ function placeOrder(event) {
 
             // Success message
             alert(
-                "🎉 ORDER PLACED SUCCESSFULLY!\n\n" +
-                "Thank you, " +
-                name +
-                " ❤️"
+                paymentMethod === "UPI / Online Payment"
+                    ? "Your order request is ready. Please send it on WhatsApp; the shop will verify your UPI payment manually."
+                    : "🎉 ORDER PLACED SUCCESSFULLY!\n\nThank you, " + name + " ❤️"
             );
 
 

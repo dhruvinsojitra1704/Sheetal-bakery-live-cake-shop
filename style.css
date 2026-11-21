@@ -1269,6 +1269,90 @@ img {
   padding-top: 15px;
 }
 
+.upi-payment {
+  margin-top: 20px;
+  padding: 18px;
+  text-align: center;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.upi-payment[hidden] {
+  display: none;
+}
+
+.upi-payment h3 {
+  margin: 0 0 8px;
+  color: var(--brown);
+}
+
+.upi-payment p {
+  margin: 8px 0;
+}
+
+.upi-qr-code {
+  display: flex;
+  justify-content: center;
+  min-height: 220px;
+  margin: 14px auto;
+}
+
+.upi-qr-code img,
+.upi-qr-code canvas {
+  max-width: 100%;
+}
+
+.upi-payment-amount {
+  display: block;
+  color: var(--brown);
+  font-size: 20px;
+}
+
+.upi-qr-countdown {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.upi-app-link {
+  display: inline-block;
+  margin: 8px 0 12px;
+  padding: 10px 16px;
+  color: white;
+  background: var(--brown);
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.upi-payment small {
+  display: block;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+#customCakePaymentSection {
+  margin: 20px auto;
+  max-width: 650px;
+}
+
+#customCakeQuotedAmount {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font: inherit;
+}
+
+#customCakeQrPayment {
+  margin-top: 16px;
+}
+
+#customCakePaidButton {
+  margin-top: 14px;
+}
+
 /* =====================================================
    SUCCESS
 ===================================================== */

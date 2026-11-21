@@ -593,6 +593,28 @@
 
         </div>
 
+        <div class="form-group">
+            <label>Payment Method</label>
+            <div class="radio-group">
+                <label>
+                    <input
+                        type="radio"
+                        name="customPaymentMethod"
+                        value="Cash on Delivery"
+                        checked
+                    >
+                    Cash on Delivery
+                </label>
+                <label>
+                    <input
+                        type="radio"
+                        name="customPaymentMethod"
+                        value="UPI / Online Payment"
+                    >
+                    UPI / Online Payment
+                </label>
+            </div>
+        </div>
 
         <button
             type="submit"
@@ -604,6 +626,37 @@
 
 
     </form>
+
+    <section id="customCakePaymentSection" class="upi-payment" hidden>
+        <h3>Pay for Your Custom Cake</h3>
+        <p>First confirm the final price with the bakery on WhatsApp, then enter that exact amount below.</p>
+        <label for="customCakeQuotedAmount">Confirmed cake price (₹)</label>
+        <input
+            type="number"
+            id="customCakeQuotedAmount"
+            min="0.01"
+            step="0.01"
+            inputmode="decimal"
+            placeholder="Enter the price confirmed by the bakery"
+        >
+        <button type="button" id="customCakeGenerateQr" class="whatsapp-button">
+            Generate Payment QR
+        </button>
+        <div id="customCakeQrPayment" hidden>
+            <div id="customCakeQrCode" class="upi-qr-code" aria-label="Custom cake UPI payment QR code"></div>
+            <strong id="customCakePaymentAmount" class="upi-payment-amount"></strong>
+            <p id="customCakeQrCountdown" class="upi-qr-countdown" aria-live="polite"></p>
+            <a id="customCakeUpiAppLink" class="upi-app-link">Open UPI app</a>
+            <small>
+                The QR and link refresh every 3 minutes. Refreshing here cannot cancel a payment
+                already opened in another app. Payment is not automatically verified; the shop
+                will check it manually.
+            </small>
+            <button type="button" id="customCakePaidButton" class="whatsapp-button">
+                I have paid — Send order on WhatsApp
+            </button>
+        </div>
+    </section>
 
 
 </section>
@@ -1027,8 +1080,7 @@
                         Cash on Delivery
 
                     </label>
-
-
+                    </label>
                     <label>
 
                         <input
@@ -1111,6 +1163,20 @@
             </strong>
 
         </div>
+
+        <section id="upiPaymentSection" class="upi-payment" hidden>
+            <h3>Pay with UPI</h3>
+            <p>Scan this QR code or open your UPI app. Pay the exact amount shown.</p>
+            <div id="upiQrCode" class="upi-qr-code" aria-label="UPI payment QR code"></div>
+            <strong id="upiPaymentAmount" class="upi-payment-amount"></strong>
+            <p id="upiQrCountdown" class="upi-qr-countdown" aria-live="polite"></p>
+            <a id="upiAppLink" class="upi-app-link">Open UPI app</a>
+            <small>
+                The QR and link refresh every 3 minutes. Refreshing here cannot cancel a
+                payment already opened in another app. Payment is not automatically verified;
+                the shop will check it manually.
+            </small>
+        </section>
 
 
     <button type="button"
@@ -1351,7 +1417,7 @@ With Love
 
 <!-- ================= END RETURN POLICY ================= -->
 
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="products-defaults.js"></script>
 <script src="script.js"></script>
 <script type="module" src="firebase-store.js"></script>
