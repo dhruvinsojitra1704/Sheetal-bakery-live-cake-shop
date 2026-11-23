@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wishlist | SHEETAL BAKERY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#8b4b20">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="wishlist-page">
+    <header class="wishlist-site-header">
+        <a href="index.html" class="wishlist-back" aria-label="Back to home">
+            <span>‹</span>
+        </a>
+        <strong>My Wishlist</strong>
+        <span id="wishlistCount" class="wishlist-count">0</span>
+    </header>
+
+    <main class="wishlist-page-main">
+        <section class="wishlist-heading">
+            <div>
+                <small>YOUR FAVOURITES</small>
+                <h1>Saved Products</h1>
+            </div>
+        </section>
+
+        <section id="wishlistGrid" class="wishlist-grid" aria-live="polite"></section>
+
+        <section id="emptyWishlist" class="empty-wishlist" hidden>
+            <div class="empty-wishlist-icon">♡</div>
+            <h2>Your wishlist is empty</h2>
+            <p>Save your favourite cakes and bakery items.</p>
+            <a href="index.html#products">Browse Products</a>
+        </section>
+    </main>
+
+    <nav class="profile-bottom-nav" aria-label="Wishlist navigation">
+        <a href="index.html"><span>⌂</span><small>Home</small></a>
+        <a href="Cake%20Manual%201.pdf" target="_blank" rel="noopener"><span>☰</span><small>Catalog</small></a>
+        <a href="wishlist.html" class="active"><span>♡</span><small>Wishlist</small></a>
+        <a href="index.html" onclick="sessionStorage.setItem('openCart','true')"><span>♧</span><small>Cart</small></a>
+        <a href="profile.html"><span>◎</span><small>Profile</small></a>
+    </nav>
+
+    <script src="products-defaults.js"></script>
+    <script>
+        window.setSheetalStoreProducts = function (products) {
+            if (typeof window.setSheetalWishlistProducts === "function") {
+                window.setSheetalWishlistProducts(products);
+            }
+        };
+    </script>
+    <script type="module" src="firebase-store.js"></script>
+    <script>
+        const wishlistKey = "sheetalBakeryWishlist";
+        let wishlistProducts = window.SHEETAL_DEFAULT_PRODUCTS || [];
+
+        function getWishlistIds() {
+            try {
+                const saved = JSON.parse(localStorage.getItem(wishlistKey) || "[]");
+                return Array.isArray(saved) ? saved.map(String) : [];
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+
+        function removeWishlistItem(productId) {
+            const ids = getWishlistIds().filter(function (id) {
+                return id !== String(productId);
+            });
+            localStorage.setItem(wishlistKey, JSON.stringify(ids));
+            renderWishlist();
+        }
+
+        function addWishlistItemToCart(productId) {
+            const product = wishlistProducts.find(function (item) {
+                return String(item.id) === String(productId);
+            });
+            if (!product) return;
+
+            let cart = [];
+            try {
+                const saved = JSON.parse(localStorage.getItem("sheetalBakeryCart") || "[]");
+                cart = Array.isArray(saved) ? saved : [];
+            } catch (error) {
+                cart = [];
+            }
+
+            const cartId = `${product.id}-Medium`;
+            const existing = cart.find(function (item) {
+                return item.cartId === cartId;
+            });
+
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({
+                    cartId: cartId,
+                    productId: product.id,
+                    name: product.name,
+                    category: product.category,
+                    image: product.image,
+                    size: "Medium",
+                    unitPrice: Number(product.price) || 0,
+                    quantity: 1
+                });
+            }
+
+            localStorage.setItem("sheetalBakeryCart", JSON.stringify(cart));
+            const button = document.querySelector(`[data-cart-id="${String(productId)}"]`);
+            if (button) {
+                button.textContent = "Added";
+                setTimeout(function () { button.textContent = "Add to Cart"; }, 900);
+            }
+        }
+
+        function renderWishlist() {
+            const ids = getWishlistIds();
+            const grid = document.getElementById("wishlistGrid");
+            const empty = document.getElementById("emptyWishlist");
+            document.getElementById("wishlistCount").textContent = ids.length;
+
+            const wishedProducts = wishlistProducts.filter(function (product) {
+                return ids.includes(String(product.id));
+            });
+
+            if (wishedProducts.length === 0) {
+                grid.innerHTML = "";
+                empty.hidden = false;
+                return;
+            }
+
+            empty.hidden = true;
+            grid.innerHTML = wishedProducts.map(function (product) {
+                const image = product.image
+                    ? `<img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}">`
+                    : `<div class="wishlist-placeholder">🎂</div>`;
+
+                return `
+                    <article class="wishlist-product-card">
+                        <button type="button" class="wishlist-remove" data-remove-id="${String(product.id)}" aria-label="Remove ${escapeHtml(product.name)}">×</button>
+                        <a class="wishlist-product-image" href="index.html" aria-label="View ${escapeHtml(product.name)}">
+                            ${image}
+                        </a>
+                        <div class="wishlist-product-info">
+                            <small>${escapeHtml(product.category)}</small>
+                            <h2>${escapeHtml(product.name)}</h2>
+                            <div class="wishlist-product-bottom">
+                                <strong>₹${Number(product.price) || 0}</strong>
+                                <button type="button" data-cart-id="${String(product.id)}" class="wishlist-add-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }).join("");
+
+            grid.querySelectorAll("[data-remove-id]").forEach(function (button) {
+                button.addEventListener("click", function () {
+                    removeWishlistItem(button.dataset.removeId);
+                });
+            });
+
+            grid.querySelectorAll("[data-cart-id]").forEach(function (button) {
+                button.addEventListener("click", function () {
+                    addWishlistItemToCart(button.dataset.cartId);
+                });
+            });
+        }
+
+        window.setSheetalWishlistProducts = function (products) {
+            wishlistProducts = Array.isArray(products) ? products : wishlistProducts;
+            renderWishlist();
+        };
+
+        renderWishlist();
+    </script>
+</body>
+</html>

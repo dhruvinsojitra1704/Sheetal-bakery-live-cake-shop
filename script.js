@@ -418,7 +418,10 @@ function createProductCard(product) {
                         class="add-button"
                         onclick="openProductModal('${escapeHtml(String(product.id))}')">
 
-                        <svg class="add-cart-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a2 2 0 104 0 2 2 0 00-4 0zm10 0a2 2 0 104 0 2 2 0 00-4 0zM1.5 3h3l2.1 11.2a2 2 0 002 1.7h8.7a2 2 0 001.9-1.4l1.5-6.5H6.1"/></svg>
+                        <svg class="add-cart-logo" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M3 3h2l2.2 10.1a2 2 0 002 1.6h7.8a2 2 0 001.9-1.4l1.4-5.8H6.1"/>
+                            <path d="M9 20a1.3 1.3 0 100-2.6A1.3 1.3 0 009 20zm8 0a1.3 1.3 0 100-2.6A1.3 1.3 0 0017 20z"/>
+                        </svg>
                         <span>Add to Cart</span>
 
                     </button>
@@ -1809,8 +1812,21 @@ async function sendOrderBillWhatsApp() {
         return;
     }
 
+    const button = document.getElementById("sendBillWhatsApp");
+    const originalText = button?.textContent;
+    if (button) {
+        button.disabled = true;
+        button.textContent = "Generating bill...";
+    }
+
     const pdf = generateOrderBillPdf(lastOrderDetails);
-    if (!pdf) return;
+    if (!pdf) {
+        if (button) {
+            button.disabled = false;
+            button.textContent = originalText;
+        }
+        return;
+    }
 
     const filename = `Sheetal-Bill-${lastOrderDetails.orderId}.pdf`;
     const pdfBlob = pdf.output("blob");
@@ -1827,9 +1843,19 @@ async function sendOrderBillWhatsApp() {
                 text: shareText,
                 files: [file]
             });
+            if (button) {
+                button.disabled = false;
+                button.textContent = originalText;
+            }
             return;
         } catch (error) {
-            if (error.name === "AbortError") return;
+            if (error.name === "AbortError") {
+                if (button) {
+                    button.disabled = false;
+                    button.textContent = originalText;
+                }
+                return;
+            }
         }
     }
 
@@ -1837,7 +1863,11 @@ async function sendOrderBillWhatsApp() {
     const whatsappURL =
         `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(shareText)}`;
     window.open(whatsappURL, "_blank");
-    alert("PDF downloaded. WhatsApp opened — please attach the downloaded PDF before sending.");
+    if (button) {
+        button.disabled = false;
+        button.textContent = originalText;
+    }
+    alert("Order PDF downloaded. WhatsApp opened — please attach the downloaded PDF.");
 }
 
 
@@ -3021,8 +3051,6 @@ function placeOrder(event) {
                 successOverlay.classList.add("active");
             }
 
-            window.open(whatsappURL, "_blank");
-
         };
 
 
@@ -3109,7 +3137,7 @@ function setupBottomNavigation() {
                 .sort(function (a, b) { return b.intersectionRatio - a.intersectionRatio; });
             if (!visible[0]) return;
 
-            if (visible[0].target.id === "products") setActive("categories");
+            if (visible[0].target.id === "products") setActive("catalog");
             if (visible[0].target.id === "home") setActive("home");
         }, { threshold: [0.15, 0.35, 0.55] });
 
