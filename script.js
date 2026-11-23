@@ -54,6 +54,143 @@ const UPI_MERCHANT_NAME = "SHEETAL BAKERY & LIVE CAKE SHOP";
 const UPI_QR_LIFETIME_SECONDS = 180;
 
 
+function openCustomerProfile() {
+    const overlay = document.getElementById("profileOverlay");
+    if (!overlay) return;
+
+    let profile = null;
+    try {
+        profile = JSON.parse(localStorage.getItem("sheetalBakeryCustomerProfile") || "null");
+    } catch (error) {
+        profile = null;
+    }
+
+    if (profile) {
+        document.getElementById("profileName").value = profile.name || "";
+        document.getElementById("profilePhone").value = profile.phone || "";
+        document.getElementById("profileAddress").value = profile.address || "";
+        document.getElementById("profilePincode").value = profile.pincode || "";
+        document.getElementById("profileTitle").textContent = "Edit Customer Profile";
+    } else {
+        document.getElementById("profileTitle").textContent = "Create Customer Profile";
+    }
+
+    overlay.classList.add("active");
+}
+
+function closeCustomerProfile() {
+    document.getElementById("profileOverlay")?.classList.remove("active");
+}
+
+function setupCustomerProfile() {
+    const form = document.getElementById("customerProfileForm");
+    if (!form) return;
+
+    let profile = null;
+    try {
+        profile = JSON.parse(localStorage.getItem("sheetalBakeryCustomerProfile") || "null");
+    } catch (error) {
+        profile = null;
+    }
+
+    if (profile) {
+        const checkoutName = document.getElementById("customerName");
+        const checkoutPhone = document.getElementById("customerPhone");
+        const checkoutAddress = document.getElementById("customerAddress");
+        const checkoutPincode = document.getElementById("customerPincode");
+        if (checkoutName) checkoutName.value = profile.name || "";
+        if (checkoutPhone) checkoutPhone.value = profile.phone || "";
+        if (checkoutAddress) checkoutAddress.value = profile.address || "";
+        if (checkoutPincode) checkoutPincode.value = profile.pincode || "";
+    }
+
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const name = document.getElementById("profileName").value.trim();
+        const phone = document.getElementById("profilePhone").value.trim();
+        const address = document.getElementById("profileAddress").value.trim();
+        const pincode = document.getElementById("profilePincode").value.trim();
+
+        if (!name || !/^[0-9]{10}$/.test(phone) || !address || !/^[0-9]{6}$/.test(pincode)) {
+            alert("Please enter a valid name, 10-digit mobile number, address and 6-digit pincode.");
+            return;
+        }
+
+        localStorage.setItem("sheetalBakeryCustomerProfile", JSON.stringify({
+            name: name,
+            phone: phone,
+            address: address,
+            pincode: pincode
+        }));
+
+        const checkoutName = document.getElementById("customerName");
+        const checkoutPhone = document.getElementById("customerPhone");
+        const checkoutAddress = document.getElementById("customerAddress");
+        const checkoutPincode = document.getElementById("customerPincode");
+        if (checkoutName) checkoutName.value = name;
+        if (checkoutPhone) checkoutPhone.value = phone;
+        if (checkoutAddress) checkoutAddress.value = address;
+        if (checkoutPincode) checkoutPincode.value = pincode;
+
+        closeCustomerProfile();
+        window.location.href = "profile.html";
+    });
+}
+
+function getWishlist() {
+    try {
+        const saved = JSON.parse(localStorage.getItem("sheetalBakeryWishlist") || "[]");
+        return Array.isArray(saved) ? saved.map(String) : [];
+    } catch (error) {
+        return [];
+    }
+}
+
+function toggleWishlist(productId, button) {
+    const wishlist = getWishlist();
+    const id = String(productId);
+    const index = wishlist.indexOf(id);
+
+    if (index >= 0) {
+        wishlist.splice(index, 1);
+    } else {
+        wishlist.push(id);
+    }
+
+    localStorage.setItem("sheetalBakeryWishlist", JSON.stringify(wishlist));
+
+    if (button) {
+        button.classList.toggle("active", wishlist.includes(id));
+        button.textContent = wishlist.includes(id) ? "♥" : "♡";
+    }
+}
+
+function showWishlist() {
+    const wishlist = getWishlist();
+    if (wishlist.length === 0) {
+        alert("Your wishlist is empty.");
+        return;
+    }
+
+    selectedCategory = "All";
+    document.querySelectorAll(".category").forEach(function (button) {
+        button.classList.remove("active");
+    });
+
+    const filtered = products.filter(function (product) {
+        return wishlist.includes(String(product.id));
+    });
+
+    const grid = document.getElementById("productsGrid");
+    const title = document.getElementById("categoryTitle");
+    if (title) title.textContent = "My Wishlist";
+    if (grid) {
+        grid.innerHTML = filtered.map(createProductCard).join("");
+    }
+    document.getElementById("products")?.scrollIntoView({ behavior: "smooth" });
+}
+
 
 /* =====================================================
    DOM READY
@@ -72,6 +209,9 @@ document.addEventListener("DOMContentLoaded", function () {
     setupCustomCakeForm();
 
     setupCheckoutForm();
+
+    setupOfferSlider();
+    setupCustomerProfile();
 
 });
 
@@ -223,6 +363,12 @@ function renderProducts(searchTerm = "") {
 
 function createProductCard(product) {
 
+    const wishlist = getWishlist();
+    const isWished = wishlist.includes(String(product.id));
+    const imageMarkup = product.image
+        ? `<img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}">`
+        : "";
+
     return `
 
         <article class="product-card">
@@ -231,12 +377,15 @@ function createProductCard(product) {
                 class="product-image"
                 onclick="openProductModal('${escapeHtml(String(product.id))}')">
 
-                ${product.image
-                    ? `<img
-                        src="${escapeHtml(product.image)}"
-                        alt="${escapeHtml(product.name)}"
-                    >`
-                    : ""}
+                ${imageMarkup}
+                <button
+                    type="button"
+                    class="wishlist-button${isWished ? " active" : ""}"
+                    onclick="event.stopPropagation(); toggleWishlist('${escapeHtml(String(product.id))}', this)"
+                    aria-label="${isWished ? "Remove from" : "Add to"} wishlist">
+                    ${isWished ? "♥" : "♡"}
+                </button>
+                <span class="availability">Available</span>
 
             </div>
 
@@ -269,7 +418,8 @@ function createProductCard(product) {
                         class="add-button"
                         onclick="openProductModal('${escapeHtml(String(product.id))}')">
 
-                        🛒 Add to Cart
+                        <svg class="add-cart-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a2 2 0 104 0 2 2 0 00-4 0zm10 0a2 2 0 104 0 2 2 0 00-4 0zM1.5 3h3l2.1 11.2a2 2 0 002 1.7h8.7a2 2 0 001.9-1.4l1.5-6.5H6.1"/></svg>
+                        <span>Add to Cart</span>
 
                     </button>
 
@@ -355,6 +505,46 @@ function selectCategoryFromNav(category) {
 /* =====================================================
    SEARCH
 ===================================================== */
+
+function setupOfferSlider() {
+    const slides = Array.from(document.querySelectorAll(".offer-slide"));
+    const dots = Array.from(document.querySelectorAll(".offer-dots button"));
+    if (slides.length === 0) return;
+
+    let activeIndex = 0;
+    let timer = null;
+
+    function showSlide(index) {
+        activeIndex = (index + slides.length) % slides.length;
+        slides.forEach(function (slide, slideIndex) {
+            slide.classList.toggle("active", slideIndex === activeIndex);
+        });
+        dots.forEach(function (dot, dotIndex) {
+            dot.classList.toggle("active", dotIndex === activeIndex);
+        });
+    }
+
+    dots.forEach(function (dot, index) {
+        dot.addEventListener("click", function () {
+            showSlide(index);
+        });
+    });
+
+    timer = setInterval(function () {
+        showSlide(activeIndex + 1);
+    }, 4500);
+
+    document.addEventListener("visibilitychange", function () {
+        if (document.hidden && timer) {
+            clearInterval(timer);
+            timer = null;
+        } else if (!document.hidden && !timer) {
+            timer = setInterval(function () {
+                showSlide(activeIndex + 1);
+            }, 4500);
+        }
+    });
+}
 
 function setupSearch() {
 
@@ -846,6 +1036,13 @@ function updateCartUI() {
         bottomCartCount.textContent = count;
     }
 
+    const premiumCartCount =
+        document.getElementById("premiumCartCount");
+
+    if (premiumCartCount) {
+        premiumCartCount.textContent = count;
+    }
+
 
     const itemCount =
         document.getElementById("cartItemCount");
@@ -912,7 +1109,7 @@ function renderCartItems() {
             <div class="empty-cart">
 
                 <div style="font-size:45px;">
-                    🛒
+                    <img class="empty-cart-logo" src="images/logo.jpeg" alt="Sheetal Bakery">
                 </div>
 
                 <h3>Your cart is empty</h3>
@@ -2883,6 +3080,55 @@ cart.forEach(function(item) {
         "\n";
 
 });
+
+function setupBottomNavigation() {
+    const nav = document.querySelector(".app-bottom-nav");
+    if (!nav) return;
+
+    const items = Array.from(nav.querySelectorAll(".app-nav-item"));
+
+    function setActive(name) {
+        items.forEach(function (item) {
+            item.classList.toggle("active", item.dataset.nav === name);
+        });
+    }
+
+    items.forEach(function (item) {
+        item.addEventListener("click", function () {
+            if (item.dataset.nav) setActive(item.dataset.nav);
+        });
+    });
+
+    const home = document.getElementById("home");
+    const products = document.getElementById("products");
+
+    if ("IntersectionObserver" in window && home && products) {
+        const observer = new IntersectionObserver(function (entries) {
+            const visible = entries
+                .filter(function (entry) { return entry.isIntersecting; })
+                .sort(function (a, b) { return b.intersectionRatio - a.intersectionRatio; });
+            if (!visible[0]) return;
+
+            if (visible[0].target.id === "products") setActive("categories");
+            if (visible[0].target.id === "home") setActive("home");
+        }, { threshold: [0.15, 0.35, 0.55] });
+
+        observer.observe(home);
+        observer.observe(products);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", setupBottomNavigation);
+
+function toggleMobilePhoneMenu() {
+    const menu = document.getElementById("mobilePhoneMenu");
+    const button = document.querySelector(".premium-phone");
+    if (!menu) return;
+
+    const isOpen = menu.classList.toggle("show");
+    if (button) button.setAttribute("aria-expanded", isOpen ? "true" : "false");
+}
+
 function toggleContactNumbers() {
     const contactNumbers = document.getElementById("contactNumbers");
     const contactButton = document.querySelector(".contact-icon-btn");
@@ -2912,5 +3158,16 @@ document.addEventListener("click", function (event) {
         document
             .querySelector(".contact-icon-btn")
             ?.setAttribute("aria-expanded", "false");
+    }
+});
+
+document.addEventListener("click", function (event) {
+    const menu = document.getElementById("mobilePhoneMenu");
+    const phoneButton = document.querySelector(".premium-phone");
+    if (!menu || !phoneButton) return;
+
+    if (!menu.contains(event.target) && !phoneButton.contains(event.target)) {
+        menu.classList.remove("show");
+        phoneButton.setAttribute("aria-expanded", "false");
     }
 });

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Profile | SHEETAL BAKERY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="profile-page">
+    <header class="profile-site-header">
+        <a href="index.html" class="profile-back" aria-label="Back to home">
+            <span>‹</span>
+        </a>
+        <strong>My Profile</strong>
+        <span class="profile-header-space"></span>
+    </header>
+
+    <main class="profile-page-main">
+        <section class="profile-identity">
+            <div class="profile-page-avatar" id="profilePageInitial">S</div>
+            <div>
+                <small>Welcome</small>
+                <h1 id="profilePageName">Create your profile</h1>
+                <p id="profilePagePhone">Save details for faster checkout</p>
+            </div>
+        </section>
+
+        <section class="profile-details-card" id="profileDetailsCard">
+            <div class="profile-card-heading">
+                <h2>Delivery Details</h2>
+                <button type="button" id="editProfileButton">Edit</button>
+            </div>
+
+            <div class="profile-detail-row">
+                <span class="profile-detail-icon">◎</span>
+                <div>
+                    <small>Full Name</small>
+                    <strong id="profileDetailName">Not added</strong>
+                </div>
+            </div>
+
+            <div class="profile-detail-row">
+                <span class="profile-detail-icon">☎</span>
+                <div>
+                    <small>Mobile Number</small>
+                    <strong id="profileDetailPhone">Not added</strong>
+                </div>
+            </div>
+
+            <div class="profile-detail-row">
+                <span class="profile-detail-icon">⌖</span>
+                <div>
+                    <small>Delivery Address</small>
+                    <strong id="profileDetailAddress">Not added</strong>
+                </div>
+            </div>
+
+            <div class="profile-detail-row">
+                <span class="profile-detail-icon">#</span>
+                <div>
+                    <small>Pincode</small>
+                    <strong id="profileDetailPincode">Not added</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="profile-form-card" id="profileFormCard" hidden>
+            <div class="profile-card-heading">
+                <h2 id="profileFormTitle">Create Profile</h2>
+                <button type="button" id="cancelProfileEdit">Cancel</button>
+            </div>
+
+            <form id="standaloneProfileForm">
+                <label for="standaloneProfileName">Full Name *</label>
+                <input type="text" id="standaloneProfileName" maxlength="60" autocomplete="name" required>
+
+                <label for="standaloneProfilePhone">Mobile Number *</label>
+                <input type="tel" id="standaloneProfilePhone" maxlength="10" inputmode="numeric" autocomplete="tel" required>
+
+                <label for="standaloneProfileAddress">Delivery Address *</label>
+                <textarea id="standaloneProfileAddress" maxlength="300" autocomplete="street-address" required></textarea>
+
+                <label for="standaloneProfilePincode">Pincode *</label>
+                <input type="text" id="standaloneProfilePincode" maxlength="6" inputmode="numeric" autocomplete="postal-code" required>
+
+                <button type="submit" class="profile-save-button">Save Profile</button>
+            </form>
+        </section>
+    </main>
+
+    <nav class="profile-bottom-nav" aria-label="Profile navigation">
+        <a href="index.html"><span>⌂</span><small>Home</small></a>
+        <a href="index.html#products"><span>♙</span><small>Categories</small></a>
+        <a href="index.html" onclick="sessionStorage.setItem('openWishlist','true')"><span>♡</span><small>Wishlist</small></a>
+        <a href="index.html" onclick="sessionStorage.setItem('openCart','true')"><span>♧</span><small>Cart</small></a>
+        <a href="profile.html" class="active"><span>◎</span><small>Profile</small></a>
+    </nav>
+
+    <script>
+        const STORAGE_KEY = "sheetalBakeryCustomerProfile";
+
+        function getProfile() {
+            try {
+                return JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function renderProfile() {
+            const profile = getProfile();
+            const detailsCard = document.getElementById("profileDetailsCard");
+            const formCard = document.getElementById("profileFormCard");
+
+            if (!profile) {
+                document.getElementById("profilePageName").textContent = "Create your profile";
+                document.getElementById("profilePagePhone").textContent = "Save details for faster checkout";
+                document.getElementById("profilePageInitial").textContent = "S";
+                detailsCard.hidden = true;
+                formCard.hidden = false;
+                document.getElementById("profileFormTitle").textContent = "Create Profile";
+                return;
+            }
+
+            detailsCard.hidden = false;
+            formCard.hidden = true;
+            document.getElementById("profilePageName").textContent = profile.name;
+            document.getElementById("profilePagePhone").textContent = profile.phone;
+            document.getElementById("profilePageInitial").textContent = profile.name.charAt(0).toUpperCase();
+            document.getElementById("profileDetailName").textContent = profile.name;
+            document.getElementById("profileDetailPhone").textContent = profile.phone;
+            document.getElementById("profileDetailAddress").textContent = profile.address;
+            document.getElementById("profileDetailPincode").textContent = profile.pincode;
+        }
+
+        function showEditForm() {
+            const profile = getProfile();
+            document.getElementById("profileDetailsCard").hidden = true;
+            document.getElementById("profileFormCard").hidden = false;
+            document.getElementById("profileFormTitle").textContent = "Edit Profile";
+            document.getElementById("standaloneProfileName").value = profile?.name || "";
+            document.getElementById("standaloneProfilePhone").value = profile?.phone || "";
+            document.getElementById("standaloneProfileAddress").value = profile?.address || "";
+            document.getElementById("standaloneProfilePincode").value = profile?.pincode || "";
+        }
+
+        document.getElementById("editProfileButton").addEventListener("click", showEditForm);
+        document.getElementById("cancelProfileEdit").addEventListener("click", function () {
+            if (getProfile()) renderProfile();
+        });
+
+        document.getElementById("standaloneProfileForm").onsubmit = function (event) {
+            event.preventDefault();
+            const name = document.getElementById("standaloneProfileName").value.trim();
+            const phone = document.getElementById("standaloneProfilePhone").value.trim();
+            const address = document.getElementById("standaloneProfileAddress").value.trim();
+            const pincode = document.getElementById("standaloneProfilePincode").value.trim();
+
+            if (!name || !/^[0-9]{10}$/.test(phone) || !address || !/^[0-9]{6}$/.test(pincode)) {
+                alert("Please enter valid profile details.");
+                return;
+            }
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({ name, phone, address, pincode }));
+            renderProfile();
+        };
+
+        renderProfile();
+    </script>
+</body>
+</html>
