@@ -44,6 +44,7 @@ let selectedMultiplier = 1;
 let customerData = null;
 
 let lastOrderMessage = "";
+let lastOrderDetails = null;
 
 let upiQrTimer = null;
 let customCakePaymentDetails = null;
@@ -185,7 +186,10 @@ function renderProducts(searchTerm = "") {
 
     } else {
 
-        title.textContent = selectedCategory;
+        title.textContent =
+            selectedCategory === "Cakes"
+                ? "Featured Products"
+                : selectedCategory;
 
     }
 
@@ -356,23 +360,33 @@ function setupSearch() {
 
     const input =
         document.getElementById("searchInput");
+    const heroInput =
+        document.getElementById("heroSearchInput");
 
-
-    if (!input) {
-
-        return;
-
+    if (input) {
+        input.addEventListener(
+            "input",
+            function () {
+                renderProducts(input.value);
+            }
+        );
     }
 
+    if (heroInput) {
+        heroInput.addEventListener("input", function () {
+            if (input) input.value = heroInput.value;
+            renderProducts(heroInput.value);
+            document
+                .getElementById("products")
+                ?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
 
-    input.addEventListener(
-        "input",
-        function () {
-
-            renderProducts(input.value);
-
-        }
-    );
+        heroInput.addEventListener("focus", function () {
+            document
+                .getElementById("products")
+                ?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+    }
 
 }
 
@@ -823,6 +837,13 @@ function updateCartUI() {
 
         cartCount.textContent = count;
 
+    }
+
+    const bottomCartCount =
+        document.getElementById("bottomCartCount");
+
+    if (bottomCartCount) {
+        bottomCartCount.textContent = count;
     }
 
 
@@ -1501,6 +1522,125 @@ function openOrderWhatsApp() {
 
     window.open(url, "_blank");
 
+}
+
+/* =====================================================
+   ORDER BILL PDF
+===================================================== */
+
+function generateOrderBillPdf(orderDetails) {
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+        alert("PDF library could not be loaded. Please check your internet connection.");
+        return null;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+    const items = orderDetails.items || [];
+    let y = 22;
+
+    pdf.setFillColor(102, 66, 45);
+    pdf.rect(0, 0, 210, 38, "F");
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(17);
+    pdf.text("SHEETAL BAKERY & LIVE CAKE SHOP", 105, 16, { align: "center" });
+    pdf.setFontSize(11);
+    pdf.text("ORDER BILL", 105, 27, { align: "center" });
+
+    pdf.setTextColor(45, 45, 45);
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(10);
+    y = 48;
+    pdf.text(`Order ID: ${orderDetails.orderId}`, 15, y);
+    pdf.text(`Date: ${orderDetails.date}`, 195, y, { align: "right" });
+    y += 8;
+    pdf.text(`Customer: ${orderDetails.name}`, 15, y);
+    y += 7;
+    pdf.text(`Mobile: ${orderDetails.phone}`, 15, y);
+    y += 7;
+
+    const addressLines = pdf.splitTextToSize(`Address: ${orderDetails.address}`, 180);
+    pdf.text(addressLines, 15, y);
+    y += addressLines.length * 5 + 7;
+    pdf.text(`Payment: ${orderDetails.paymentMethod}`, 15, y);
+    y += 10;
+
+    pdf.setDrawColor(180, 150, 120);
+    pdf.line(15, y, 195, y);
+    y += 8;
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Item", 15, y);
+    pdf.text("Qty", 135, y);
+    pdf.text("Amount", 195, y, { align: "right" });
+    y += 7;
+    pdf.setFont("helvetica", "normal");
+
+    items.forEach(function (item) {
+        const quantity = Number(item.quantity) || 1;
+        const price = Number(item.unitPrice) || 0;
+        const nameLines = pdf.splitTextToSize(item.name, 112);
+        pdf.text(nameLines, 15, y);
+        pdf.text(String(quantity), 135, y);
+        pdf.text(`Rs. ${price * quantity}`, 195, y, { align: "right" });
+        y += Math.max(nameLines.length * 5, 7);
+    });
+
+    y += 3;
+    pdf.line(15, y, 195, y);
+    y += 8;
+    pdf.text(`Subtotal: Rs. ${orderDetails.subtotal}`, 195, y, { align: "right" });
+    y += 7;
+    pdf.text(`Delivery: Rs. ${orderDetails.deliveryCharge}`, 195, y, { align: "right" });
+    y += 9;
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(12);
+    pdf.setTextColor(102, 66, 45);
+    pdf.text(`TOTAL: Rs. ${orderDetails.total}`, 195, y, { align: "right" });
+
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(9);
+    pdf.setTextColor(120, 120, 120);
+    pdf.text("Thank you for your order!", 105, 285, { align: "center" });
+
+    return pdf;
+}
+
+async function sendOrderBillWhatsApp() {
+    if (!lastOrderDetails) {
+        alert("Please place an order first.");
+        return;
+    }
+
+    const pdf = generateOrderBillPdf(lastOrderDetails);
+    if (!pdf) return;
+
+    const filename = `Sheetal-Bill-${lastOrderDetails.orderId}.pdf`;
+    const pdfBlob = pdf.output("blob");
+    const file = new File([pdfBlob], filename, { type: "application/pdf" });
+    const shareText =
+        `Bill for order ${lastOrderDetails.orderId}\n` +
+        `Customer: ${lastOrderDetails.name}\n` +
+        `Total: Rs. ${lastOrderDetails.total}`;
+
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+            await navigator.share({
+                title: `Sheetal Bakery Bill - ${lastOrderDetails.orderId}`,
+                text: shareText,
+                files: [file]
+            });
+            return;
+        } catch (error) {
+            if (error.name === "AbortError") return;
+        }
+    }
+
+    pdf.save(filename);
+    const whatsappURL =
+        `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(shareText)}`;
+    window.open(whatsappURL, "_blank");
+    alert("PDF downloaded. WhatsApp opened — please attach the downloaded PDF before sending.");
 }
 
 
@@ -2650,20 +2790,41 @@ function placeOrder(event) {
                 "?text=" +
                 encodeURIComponent(message);
 
+            const orderId = "SB" + Date.now().toString().slice(-8);
 
-            // Success message
-            alert(
-                paymentMethod === "UPI / Online Payment"
-                    ? "Your order request is ready. Please send it on WhatsApp; the shop will verify your UPI payment manually."
-                    : "🎉 ORDER PLACED SUCCESSFULLY!\n\nThank you, " + name + " ❤️"
-            );
+            lastOrderMessage = message;
+            lastOrderDetails = {
+                orderId: orderId,
+                date: new Date().toLocaleString("en-IN"),
+                name: name,
+                phone: phone,
+                address: address,
+                paymentMethod: paymentMethod,
+                items: cart.map(function (item) {
+                    return {
+                        name: item.name,
+                        quantity: Number(item.quantity) || 1,
+                        unitPrice: Number(item.unitPrice) || 0
+                    };
+                }),
+                subtotal: getSubtotal(),
+                deliveryCharge: getDeliveryCharge(),
+                total: total
+            };
 
+            const orderIdElement = document.getElementById("orderId");
+            if (orderIdElement) {
+                orderIdElement.textContent = orderId;
+            }
 
-            // Open WhatsApp
-            window.open(
-                whatsappURL,
-                "_blank"
-            );
+            closeReview();
+
+            const successOverlay = document.getElementById("successOverlay");
+            if (successOverlay) {
+                successOverlay.classList.add("active");
+            }
+
+            window.open(whatsappURL, "_blank");
 
         };
 
@@ -2724,9 +2885,16 @@ cart.forEach(function(item) {
 });
 function toggleContactNumbers() {
     const contactNumbers = document.getElementById("contactNumbers");
+    const contactButton = document.querySelector(".contact-icon-btn");
 
     if (contactNumbers) {
         contactNumbers.classList.toggle("show");
+        if (contactButton) {
+            contactButton.setAttribute(
+                "aria-expanded",
+                contactNumbers.classList.contains("show") ? "true" : "false"
+            );
+        }
     }
 }
 
@@ -2741,5 +2909,8 @@ document.addEventListener("click", function (event) {
         !contactBox.contains(event.target)
     ) {
         contactNumbers.classList.remove("show");
+        document
+            .querySelector(".contact-icon-btn")
+            ?.setAttribute("aria-expanded", "false");
     }
 });

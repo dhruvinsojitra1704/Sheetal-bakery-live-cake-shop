@@ -13,6 +13,9 @@
 
     <title>SHEETAL BAKERY & LIVE CAKE SHOP</title>
 
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
     <link rel="stylesheet" href="style.css">
 
 </head>
@@ -70,20 +73,46 @@
 </nav>
 
 <div class="top-contact">
-    <button class="contact-icon-btn" onclick="toggleContactNumbers()">
-        <i class="fa-solid fa-phone"></i>
-        <span>📞</span>
+    <button
+        class="contact-icon-btn"
+        onclick="toggleContactNumbers()"
+        aria-label="Show bakery phone numbers"
+        aria-controls="contactNumbers"
+        aria-expanded="false">
+        <svg class="contact-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6.62 10.79a15.46 15.46 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1V20a1 1 0 01-1 1C10.61 21 3 13.39 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.24.2 2.45.57 3.57a1 1 0 01-.25 1.02l-2.2 2.2z"/>
+        </svg>
     </button>
 
     <div class="contact-numbers" id="contactNumbers">
+        <div class="contact-heading">
+            <span>Call the bakery</span>
+            <small>Tap a number to call</small>
+        </div>
         <a href="tel:+917874131575">
-            <i class="fa-solid fa-phone"></i>
-            7874131575
+            <span class="contact-phone-icon">
+                <svg class="contact-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M6.62 10.79a15.46 15.46 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1V20a1 1 0 01-1 1C10.61 21 3 13.39 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.24.2 2.45.57 3.57a1 1 0 01-.25 1.02l-2.2 2.2z"/>
+                </svg>
+            </span>
+            <span class="contact-number">
+                <small>Primary</small>
+                <strong>7874131575</strong>
+            </span>
+            <i class="fa-solid fa-chevron-right contact-arrow"></i>
         </a>
 
         <a href="tel:+919723687308">
-            <i class="fa-solid fa-phone"></i>
-            9723687308
+            <span class="contact-phone-icon">
+                <svg class="contact-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M6.62 10.79a15.46 15.46 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1V20a1 1 0 01-1 1C10.61 21 3 13.39 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.24.2 2.45.57 3.57a1 1 0 01-.25 1.02l-2.2 2.2z"/>
+                </svg>
+            </span>
+            <span class="contact-number">
+                <small>Alternate</small>
+                <strong>9723687308</strong>
+            </span>
+            <i class="fa-solid fa-chevron-right contact-arrow"></i>
         </a>
     </div>
 </div>
@@ -173,6 +202,24 @@
 
     <div class="hero-content">
 
+        <div class="bakery-location">
+            <span class="location-pin">●</span>
+            <div>
+                <small>Delivering to</small>
+                <strong>Sheetal Bakery</strong>
+            </div>
+        </div>
+
+        <div class="hero-search">
+            <span>🔍</span>
+            <input
+                type="text"
+                id="heroSearchInput"
+                placeholder="Search cakes, bakery & snacks..."
+                autocomplete="off"
+            >
+        </div>
+
         <p class="hero-small">
             FRESH • TASTY • ALWAYS
         </p>
@@ -218,6 +265,20 @@
     </div>
 
 
+</section>
+
+<section class="offer-strip" aria-label="Special bakery offer">
+    <div class="offer-copy">
+        <small>LIMITED TIME OFFER</small>
+        <h2>Fresh cakes for every celebration</h2>
+        <p>Freshly baked today with free delivery above ₹500.</p>
+        <button type="button" onclick="filterProducts('Cakes', document.querySelector('.category[data-category=&quot;Cakes&quot;]'))">
+            Shop cakes <span>→</span>
+        </button>
+    </div>
+    <div class="offer-cake">
+        <span>🎂</span>
+    </div>
 </section>
 
 
@@ -660,6 +721,32 @@
 
 
 </section>
+
+<nav class="app-bottom-nav" aria-label="Mobile navigation">
+    <a href="#home" class="app-nav-item active">
+        <span class="app-nav-icon">⌂</span>
+        <span>Home</span>
+    </a>
+    <a href="#products" class="app-nav-item">
+        <span class="app-nav-icon">♙</span>
+        <span>Explore</span>
+    </a>
+    <a href="#custom-cake" class="app-nav-item">
+        <span class="app-nav-icon">♡</span>
+        <span>Wishlist</span>
+    </a>
+    <button type="button" class="app-nav-item" onclick="openCart()">
+        <span class="app-nav-icon app-cart-icon">
+            ♡
+            <span id="bottomCartCount">0</span>
+        </span>
+        <span>Cart</span>
+    </button>
+    <a href="policy.html" class="app-nav-item">
+        <span class="app-nav-icon">◎</span>
+        <span>Profile</span>
+    </a>
+</nav>
 
 
 <!-- =====================================================
@@ -1250,6 +1337,16 @@
 
         </button>
 
+        <button
+            type="button"
+            id="sendBillWhatsApp"
+            class="whatsapp-button"
+            onclick="sendOrderBillWhatsApp()">
+
+            📄 Send Bill PDF on WhatsApp
+
+        </button>
+
 
         <button
             class="home-button"
@@ -1418,6 +1515,7 @@ With Love
 <!-- ================= END RETURN POLICY ================= -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="products-defaults.js"></script>
 <script src="script.js"></script>
 <script type="module" src="firebase-store.js"></script>
