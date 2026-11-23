@@ -1835,6 +1835,10 @@ async function sendOrderBillWhatsApp() {
         `Bill for order ${lastOrderDetails.orderId}\n` +
         `Customer: ${lastOrderDetails.name}\n` +
         `Total: Rs. ${lastOrderDetails.total}`;
+    const bakeryWhatsAppUrl =
+        `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+            `${shareText}\n\nPlease find my order PDF attached.`
+        )}`;
 
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
@@ -1847,6 +1851,7 @@ async function sendOrderBillWhatsApp() {
                 button.disabled = false;
                 button.textContent = originalText;
             }
+            window.open(bakeryWhatsAppUrl, "_blank");
             return;
         } catch (error) {
             if (error.name === "AbortError") {
@@ -1867,7 +1872,12 @@ async function sendOrderBillWhatsApp() {
         button.disabled = false;
         button.textContent = originalText;
     }
-    alert("Order PDF downloaded. WhatsApp opened — please attach the downloaded PDF.");
+    alert(
+        "Note: Aa generated bill tame +91 7874131575 WhatsApp number par mokalvo padshe. " +
+        "Bill mokalwa thi j order confirm thashe.\n\n" +
+        "Note: Please send the generated bill to the +91 7874131575 WhatsApp number. " +
+        "The order will be confirmed only after the bill is sent."
+    );
 }
 
 
