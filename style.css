@@ -7061,6 +7061,16 @@ body {
         height: 150px;
     }
 
+    .offer-slide.active .offer-image img {
+        display: block;
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        object-position: center;
+        opacity: 1;
+        visibility: visible;
+    }
+
     .offer-emoji {
         font-size: 72px;
     }
@@ -7599,8 +7609,13 @@ body {
     }
 
     .premium-brand img {
-        width: 36px;
-        height: 36px;
+        width: 40px;
+        height: 40px;
+        display: block;
+        flex: 0 0 40px;
+        object-fit: contain;
+        border-radius: 50%;
+        background: #fff;
     }
 
     .premium-brand strong {
@@ -8409,4 +8424,106 @@ body {
         width: 24px;
         height: 24px;
         stroke-width: 1.65;
+    }
+
+    .bill-send-notice-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 100500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        background: rgba(38, 24, 17, 0.58);
+        backdrop-filter: blur(5px);
+    }
+
+    .bill-send-notice-box {
+        position: relative;
+        width: min(420px, calc(100vw - 32px));
+        padding: 24px 22px 18px;
+        border: 1px solid #f0d5d1;
+        border-radius: 18px;
+        background: #fff;
+        box-shadow: 0 22px 70px rgba(55, 31, 20, 0.28);
+        text-align: center;
+    }
+
+    .bill-send-notice-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 34px;
+        height: 34px;
+        border: 1px solid #eee5df;
+        border-radius: 50%;
+        background: #fff;
+        color: #7d6b62;
+        font-size: 20px;
+        line-height: 30px;
+    }
+
+    .bill-send-notice-icon {
+        width: 54px;
+        height: 54px;
+        margin: 0 auto 10px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: #fff0ee;
+        color: #d12f26;
+        font-size: 28px;
+        font-weight: 800;
+    }
+
+    .bill-send-notice-label {
+        margin: 0 0 8px;
+        color: #7d6b62;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+    }
+
+    .bill-send-notice-red {
+        margin: 0;
+        color: #d12f26;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.55;
+    }
+
+    .bill-send-notice-red strong {
+        color: #c51f18;
+        font-weight: 800;
+    }
+
+    .bill-send-notice-small {
+        margin: 10px 0 0;
+        color: #8b7e76;
+        font-size: 10px;
+        line-height: 1.45;
+    }
+
+    .bill-send-notice-ok {
+        width: 100%;
+        height: 44px;
+        margin-top: 16px;
+        border: 0;
+        border-radius: 10px;
+        background: #d12f26;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    @media (max-width: 480px) {
+        .bill-send-notice-box {
+            width: calc(100vw - 28px);
+            padding: 22px 16px 16px;
+            border-radius: 16px;
+        }
+
+        .bill-send-notice-red {
+            font-size: 13px;
+        }
     }

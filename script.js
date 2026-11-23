@@ -533,9 +533,11 @@ function setupOfferSlider() {
         });
     });
 
+    showSlide(0);
+
     timer = setInterval(function () {
         showSlide(activeIndex + 1);
-    }, 4500);
+    }, 8000);
 
     document.addEventListener("visibilitychange", function () {
         if (document.hidden && timer) {
@@ -1728,82 +1730,264 @@ function openOrderWhatsApp() {
    ORDER BILL PDF
 ===================================================== */
 
-function generateOrderBillPdf(orderDetails) {
+async function loadPdfImageData(url) {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) return null;
+        const blob = await response.blob();
+        return await new Promise(function (resolve) {
+            const reader = new FileReader();
+            reader.onload = function () { resolve(reader.result); };
+            reader.onerror = function () { resolve(null); };
+            reader.readAsDataURL(blob);
+        });
+    } catch (error) {
+        return null;
+    }
+}
+
+function generatePdfQrData(text) {
+    if (typeof QRCode === "undefined") return null;
+
+    try {
+        const container = document.createElement("div");
+        container.style.position = "fixed";
+        container.style.left = "-1000px";
+        document.body.appendChild(container);
+        new QRCode(container, {
+            text: text,
+            width: 220,
+            height: 220,
+            correctLevel: QRCode.CorrectLevel.M
+        });
+
+        const canvas = container.querySelector("canvas");
+        const dataUrl = canvas ? canvas.toDataURL("image/png") : null;
+        container.remove();
+        return dataUrl;
+    } catch (error) {
+        return null;
+    }
+}
+
+async function generateOrderBillPdf(orderDetails) {
     if (!window.jspdf || !window.jspdf.jsPDF) {
         alert("PDF library could not be loaded. Please check your internet connection.");
         return null;
     }
 
     const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF();
+    const pdf = new jsPDF("p", "mm", "a4");
     const items = orderDetails.items || [];
-    let y = 22;
+    const total = Number(orderDetails.total) || 0;
+    const subtotal = Number(orderDetails.subtotal) || 0;
+    const delivery = Number(orderDetails.deliveryCharge) || 0;
+    const billDate = orderDetails.date || new Date().toLocaleString("en-IN");
 
-    pdf.setFillColor(102, 66, 45);
-    pdf.rect(0, 0, 210, 38, "F");
-    pdf.setTextColor(255, 255, 255);
+    const [logoData, cakeData] = await Promise.all([
+        loadPdfImageData("./images/logo.jpeg"),
+        loadPdfImageData("./images/home.jpeg")
+    ]);
+
+    const paymentReference = `SB${Date.now()}`;
+    const upiText = `upi://pay?${new URLSearchParams({
+        pa: UPI_ID,
+        pn: UPI_MERCHANT_NAME,
+        tr: paymentReference,
+        am: total.toFixed(2),
+        cu: "INR",
+        tn: `SHEETAL BAKERY Bill ${orderDetails.orderId}`
+    }).toString()}`;
+    const qrData = generatePdfQrData(upiText);
+
+    pdf.setFillColor(255, 248, 238);
+    pdf.rect(0, 0, 210, 78, "F");
+    pdf.setFillColor(153, 42, 43);
+    pdf.rect(0, 69, 210, 9, "F");
+
+    if (logoData) {
+        pdf.addImage(logoData, "JPEG", 12, 7, 42, 42);
+    }
+
     pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(17);
-    pdf.text("SHEETAL BAKERY & LIVE CAKE SHOP", 105, 16, { align: "center" });
+    pdf.setTextColor(153, 42, 43);
+    pdf.setFontSize(27);
+    pdf.text("SHEETAL", 58, 23);
+    pdf.setFontSize(15);
+    pdf.setTextColor(55, 39, 28);
+    pdf.text("BAKERY & LIVE CAKE SHOP", 58, 32);
+    pdf.setFont("helvetica", "normal");
     pdf.setFontSize(11);
-    pdf.text("ORDER BILL", 105, 27, { align: "center" });
+    pdf.setTextColor(153, 42, 43);
+    pdf.text("Pasodra, Surat, Gujarat", 58, 40);
+    pdf.setFont("times", "italic");
+    pdf.setFontSize(13);
+    pdf.setTextColor(83, 55, 40);
+    pdf.text("Freshness & Happiness in Every Bite", 58, 51);
 
-    pdf.setTextColor(45, 45, 45);
+    if (cakeData) {
+        pdf.addImage(cakeData, "JPEG", 135, 7, 63, 56);
+    }
+
+    pdf.setFillColor(153, 42, 43);
+    pdf.roundedRect(12, 81, 186, 10, 3, 3, "F");
+    pdf.setFont("helvetica", "bold");
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFontSize(15);
+    pdf.text("TAX INVOICE / CASH MEMO", 105, 88, { align: "center" });
+
+    const isUpi = orderDetails.paymentMethod === "UPI / Online Payment";
+    pdf.setFillColor(232, 250, 238);
+    pdf.roundedRect(166, 94, 32, 10, 3, 3, "F");
+    pdf.setTextColor(40, 145, 67);
+    pdf.setFontSize(12);
+    pdf.text(isUpi ? "PAID" : "PENDING", 182, 101, { align: "center" });
+
+    pdf.setTextColor(55, 39, 28);
     pdf.setFont("helvetica", "normal");
     pdf.setFontSize(10);
-    y = 48;
-    pdf.text(`Order ID: ${orderDetails.orderId}`, 15, y);
-    pdf.text(`Date: ${orderDetails.date}`, 195, y, { align: "right" });
-    y += 8;
-    pdf.text(`Customer: ${orderDetails.name}`, 15, y);
-    y += 7;
-    pdf.text(`Mobile: ${orderDetails.phone}`, 15, y);
-    y += 7;
+    pdf.text(`Bill No. : ${orderDetails.orderId}`, 12, 99);
+    pdf.text(`Date : ${billDate}`, 12, 106);
 
-    const addressLines = pdf.splitTextToSize(`Address: ${orderDetails.address}`, 180);
-    pdf.text(addressLines, 15, y);
-    y += addressLines.length * 5 + 7;
-    pdf.text(`Payment: ${orderDetails.paymentMethod}`, 15, y);
-    y += 10;
-
-    pdf.setDrawColor(180, 150, 120);
-    pdf.line(15, y, 195, y);
-    y += 8;
+    pdf.setFillColor(153, 42, 43);
+    pdf.roundedRect(112, 94, 48, 8, 3, 3, "F");
+    pdf.setTextColor(255, 255, 255);
     pdf.setFont("helvetica", "bold");
-    pdf.text("Item", 15, y);
-    pdf.text("Qty", 135, y);
-    pdf.text("Amount", 195, y, { align: "right" });
-    y += 7;
-    pdf.setFont("helvetica", "normal");
+    pdf.text("Customer Details", 136, 99.5, { align: "center" });
 
-    items.forEach(function (item) {
+    pdf.setTextColor(55, 39, 28);
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Name", 112, 108);
+    pdf.text("Mobile", 112, 114);
+    pdf.text("Address", 112, 120);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`: ${orderDetails.name}`, 132, 108);
+    pdf.text(`: ${orderDetails.phone}`, 132, 114);
+    const addressLines = pdf.splitTextToSize(`: ${orderDetails.address}`, 62);
+    pdf.text(addressLines, 132, 120);
+
+    const tableTop = 128;
+    pdf.setFillColor(153, 42, 43);
+    pdf.roundedRect(12, tableTop, 186, 10, 2, 2, "F");
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(11);
+    pdf.text("Sr.", 17, tableTop + 6.5);
+    pdf.text("Item Name", 31, tableTop + 6.5);
+    pdf.text("Qty", 124, tableTop + 6.5);
+    pdf.text("Rate", 145, tableTop + 6.5);
+    pdf.text("Amount", 194, tableTop + 6.5, { align: "right" });
+
+    let y = tableTop + 10;
+    pdf.setTextColor(55, 39, 28);
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(10);
+
+    items.forEach(function (item, index) {
         const quantity = Number(item.quantity) || 1;
         const price = Number(item.unitPrice) || 0;
-        const nameLines = pdf.splitTextToSize(item.name, 112);
-        pdf.text(nameLines, 15, y);
-        pdf.text(String(quantity), 135, y);
-        pdf.text(`Rs. ${price * quantity}`, 195, y, { align: "right" });
-        y += Math.max(nameLines.length * 5, 7);
+        const rowHeight = 12;
+        pdf.setFillColor(index % 2 === 0 ? 255 : 252, index % 2 === 0 ? 255 : 248, index % 2 === 0 ? 255 : 243);
+        pdf.rect(12, y, 186, rowHeight, "F");
+        pdf.setDrawColor(214, 199, 188);
+        pdf.rect(12, y, 186, rowHeight);
+        pdf.text(String(index + 1), 17, y + 7);
+        const nameLines = pdf.splitTextToSize(item.name, 88);
+        pdf.text(nameLines[0] || item.name, 31, y + 7);
+        pdf.text(String(quantity), 124, y + 7);
+        pdf.text(`Rs.${price}`, 145, y + 7);
+        pdf.text(`Rs.${price * quantity}`, 194, y + 7, { align: "right" });
+        y += rowHeight;
     });
 
-    y += 3;
-    pdf.line(15, y, 195, y);
-    y += 8;
-    pdf.text(`Subtotal: Rs. ${orderDetails.subtotal}`, 195, y, { align: "right" });
-    y += 7;
-    pdf.text(`Delivery: Rs. ${orderDetails.deliveryCharge}`, 195, y, { align: "right" });
-    y += 9;
+    const qrTop = y + 8;
+    pdf.setDrawColor(153, 42, 43);
+    pdf.roundedRect(12, qrTop, 82, 61, 4, 4);
+    pdf.setFillColor(153, 42, 43);
+    pdf.roundedRect(12, qrTop, 82, 10, 3, 3, "F");
+    pdf.setTextColor(255, 255, 255);
     pdf.setFont("helvetica", "bold");
     pdf.setFontSize(12);
-    pdf.setTextColor(102, 66, 45);
-    pdf.text(`TOTAL: Rs. ${orderDetails.total}`, 195, y, { align: "right" });
-
-    pdf.setFont("helvetica", "normal");
+    pdf.text("Scan & Pay", 53, qrTop + 7, { align: "center" });
+    if (qrData) {
+        pdf.addImage(qrData, "PNG", 18, qrTop + 13, 34, 34);
+    }
+    pdf.setFont("helvetica", "bold");
     pdf.setFontSize(9);
-    pdf.setTextColor(120, 120, 120);
-    pdf.text("Thank you for your order!", 105, 285, { align: "center" });
+    pdf.setTextColor(55, 39, 28);
+    pdf.text("GPay  UPI", 64, qrTop + 25);
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(8);
+    pdf.text(UPI_ID, 53, qrTop + 52, { align: "center" });
+
+    const summaryX = 112;
+    pdf.setTextColor(55, 39, 28);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(11);
+    pdf.setFillColor(252, 248, 243);
+    pdf.roundedRect(summaryX, qrTop, 86, 61, 4, 4, "F");
+    pdf.setDrawColor(214, 199, 188);
+    pdf.roundedRect(summaryX, qrTop, 86, 61, 4, 4);
+    pdf.text("Subtotal", 118, qrTop + 15);
+    pdf.text(`Rs. ${subtotal}`, 192, qrTop + 15, { align: "right" });
+    pdf.text("Delivery Charge", 118, qrTop + 27);
+    pdf.text(`Rs. ${delivery}`, 192, qrTop + 27, { align: "right" });
+    pdf.setFillColor(153, 42, 43);
+    pdf.roundedRect(summaryX + 2, qrTop + 36, 82, 18, 3, 3, "F");
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFontSize(14);
+    pdf.text("GRAND TOTAL", 118, qrTop + 47);
+    pdf.text(`Rs. ${total}`, 192, qrTop + 47, { align: "right" });
+
+    const footerY = 270;
+    pdf.setFillColor(153, 42, 43);
+    pdf.roundedRect(12, footerY, 186, 20, 4, 4, "F");
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(10);
+    pdf.text("Premium Cakes  |  Always Fresh  |  Perfect for Every Celebration", 105, footerY + 12, { align: "center" });
+    pdf.setFont("times", "italic");
+    pdf.setFontSize(16);
+    pdf.setTextColor(153, 42, 43);
+    pdf.text("Thank You For Visiting!", 105, 292, { align: "center" });
 
     return pdf;
+}
+
+function showBillSendNotice() {
+    if (document.getElementById("billSendNoticeOverlay")) return;
+
+    const overlay = document.createElement("div");
+    overlay.id = "billSendNoticeOverlay";
+    overlay.className = "bill-send-notice-overlay";
+    overlay.innerHTML = `
+        <div class="bill-send-notice-box" role="dialog" aria-modal="true" aria-labelledby="billSendNoticeTitle">
+            <button type="button" class="bill-send-notice-close" aria-label="Close notice">×</button>
+            <div class="bill-send-notice-icon" aria-hidden="true">!</div>
+            <p class="bill-send-notice-label" id="billSendNoticeTitle">IMPORTANT NOTICE</p>
+            <p class="bill-send-notice-red">
+                <strong>નૉટ:</strong> આ બનાવેલ બિલ તમે
+                <strong>+91 7874131575</strong>
+                WhatsApp નંબર પર મોકલશો તો જ ઑર્ડર confirm થશે.
+            </p>
+            <p class="bill-send-notice-small">
+                Please send the bill to +91 7874131575 on WhatsApp for order confirmation.
+            </p>
+            <button type="button" class="bill-send-notice-ok">OK</button>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    const closeNotice = function () {
+        overlay.remove();
+    };
+
+    overlay.querySelector(".bill-send-notice-close").addEventListener("click", closeNotice);
+    overlay.querySelector(".bill-send-notice-ok").addEventListener("click", closeNotice);
+    overlay.addEventListener("click", function (event) {
+        if (event.target === overlay) closeNotice();
+    });
 }
 
 async function sendOrderBillWhatsApp() {
@@ -1819,7 +2003,7 @@ async function sendOrderBillWhatsApp() {
         button.textContent = "Generating bill...";
     }
 
-    const pdf = generateOrderBillPdf(lastOrderDetails);
+    const pdf = await generateOrderBillPdf(lastOrderDetails);
     if (!pdf) {
         if (button) {
             button.disabled = false;
@@ -1852,6 +2036,7 @@ async function sendOrderBillWhatsApp() {
                 button.textContent = originalText;
             }
             window.open(bakeryWhatsAppUrl, "_blank");
+            showBillSendNotice();
             return;
         } catch (error) {
             if (error.name === "AbortError") {
@@ -1872,12 +2057,7 @@ async function sendOrderBillWhatsApp() {
         button.disabled = false;
         button.textContent = originalText;
     }
-    alert(
-        "Note: Aa generated bill tame +91 7874131575 WhatsApp number par mokalvo padshe. " +
-        "Bill mokalwa thi j order confirm thashe.\n\n" +
-        "Note: Please send the generated bill to the +91 7874131575 WhatsApp number. " +
-        "The order will be confirmed only after the bill is sent."
-    );
+    showBillSendNotice();
 }
 
 
