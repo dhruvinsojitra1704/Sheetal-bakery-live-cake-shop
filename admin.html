@@ -21,14 +21,14 @@
         </header>
 
         <section id="setupNotice" class="notice" hidden>
-            <h1>Finish Firebase setup</h1>
-            <p>Add your Firebase Web App settings and admin email to <code>firebase-config.js</code>, then enable Firebase Authentication, Firestore, and Storage.</p>
+            <h1>Finish Supabase setup</h1>
+            <p>Add your Supabase project URL, publishable key and owner email to <code>supabase-config.js</code>, then run <code>supabase-setup.sql</code> in the Supabase SQL Editor. Follow <a href="SUPABASE_SETUP.md">the setup guide</a>.</p>
         </section>
 
         <section id="loginPanel" class="panel auth-panel" hidden>
             <div class="eyebrow">PRIVATE SHOP MANAGEMENT</div>
             <h1>Sign in to manage products</h1>
-            <p>Only the shop admin account can change product photos and prices.</p>
+            <p>Only the configured, verified shop owner account can manage this shop. Public registration is disabled.</p>
             <form id="loginForm">
                 <label for="adminEmailInput">Admin email</label>
                 <input id="adminEmailInput" type="email" autocomplete="username" required>
@@ -39,26 +39,24 @@
             <p id="loginStatus" class="status" role="status" aria-live="polite"></p>
         </section>
 
-        <section id="verificationPanel" class="panel" hidden>
-            <div class="eyebrow">ONE-TIME SECURITY CHECK</div>
-            <h1>Verify the admin email</h1>
-            <p>Firebase requires the authorized admin email to be verified before products can be changed.</p>
-            <button id="sendVerificationButton" class="primary-button" type="button">Send verification email</button>
-            <button id="refreshVerificationButton" class="secondary-button" type="button">I verified it — continue</button>
-            <button id="verificationSignOutButton" class="text-button" type="button">Sign out</button>
-            <p id="verificationStatus" class="status" role="status" aria-live="polite"></p>
-        </section>
-
         <section id="dashboard" hidden>
             <div class="dashboard-heading">
                 <div>
-                    <div class="eyebrow">YOUR CATALOG</div>
-                    <h1>Products &amp; prices</h1>
-                    <p>Changes are saved online and appear on the shop for all customers.</p>
+                    <div class="eyebrow">PRIVATE OWNER DASHBOARD</div>
+                    <h1>Shop management</h1>
+                    <p>Manage products, customer requests and public shop information.</p>
                 </div>
                 <button id="signOutButton" class="secondary-button" type="button">Sign out</button>
             </div>
 
+            <nav class="admin-nav" aria-label="Admin sections">
+                <button type="button" class="admin-nav-button active" data-admin-view="products">Products &amp; prices</button>
+                <button type="button" class="admin-nav-button" data-admin-view="orders">Orders <span id="ordersBadge" class="count-badge">0</span></button>
+                <button type="button" class="admin-nav-button" data-admin-view="requests">Custom cake requests <span id="requestsBadge" class="count-badge">0</span></button>
+                <button type="button" class="admin-nav-button" data-admin-view="website">Website content</button>
+            </nav>
+
+            <section id="productsView" class="admin-view">
             <div class="dashboard-grid">
                 <section class="panel editor-panel">
                     <h2 id="editorTitle">Add a product</h2>
@@ -84,7 +82,7 @@
                         <textarea id="productDescription" name="description" maxlength="300" rows="3"></textarea>
 
                         <label for="productImage">Product photo</label>
-                        <input id="productImage" name="image" type="file" accept="image/*">
+                        <input id="productImage" name="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
                         <small class="field-help">Choose a clear photo. Maximum size: 5 MB. Leave empty to keep the current photo.</small>
                         <img id="imagePreview" class="image-preview" alt="Selected product photo preview" hidden>
 
@@ -106,8 +104,71 @@
                     <div id="productList" class="product-list"></div>
                 </section>
             </div>
+            </section>
+
+            <section id="ordersView" class="admin-view panel management-panel" hidden>
+                <div class="catalog-heading">
+                    <div>
+                        <div class="eyebrow">CUSTOMER ORDERS</div>
+                        <h2>Incoming orders</h2>
+                    </div>
+                    <span id="ordersCount" class="count-badge">0</span>
+                </div>
+                <p class="field-help">Orders submitted from the shop appear here. Update each order as you contact and fulfil it.</p>
+                <p id="ordersStatus" class="status" role="status" aria-live="polite"></p>
+                <div id="ordersList" class="record-list"></div>
+            </section>
+
+            <section id="requestsView" class="admin-view panel management-panel" hidden>
+                <div class="catalog-heading">
+                    <div>
+                        <div class="eyebrow">MADE TO ORDER</div>
+                        <h2>Custom cake requests</h2>
+                    </div>
+                    <span id="requestsCount" class="count-badge">0</span>
+                </div>
+                <p id="requestsStatus" class="status" role="status" aria-live="polite"></p>
+                <div id="requestsList" class="record-list"></div>
+            </section>
+
+            <section id="websiteView" class="admin-view panel management-panel" hidden>
+                <div class="eyebrow">PUBLIC SHOP DETAILS</div>
+                <h2>Website content</h2>
+                <p class="field-help">Saved details appear on the public shop after the page refreshes.</p>
+                <form id="websiteForm" class="website-form">
+                    <label for="bannerTitle">Homepage banner title</label>
+                    <input id="bannerTitle" maxlength="100" required>
+                    <label for="bannerDescription">Homepage banner description</label>
+                    <textarea id="bannerDescription" maxlength="300" rows="3" required></textarea>
+                    <label for="shopHours">Shop timings</label>
+                    <input id="shopHours" maxlength="120" placeholder="Daily, 9:00 AM - 10:00 PM">
+                    <label for="shopLocation">Shop location</label>
+                    <input id="shopLocation" maxlength="120">
+                    <div class="form-row">
+                        <div>
+                            <label for="shopPhone">Primary contact number</label>
+                            <input id="shopPhone" type="tel" maxlength="15">
+                        </div>
+                        <div>
+                            <label for="alternatePhone">Alternate contact number</label>
+                            <input id="alternatePhone" type="tel" maxlength="15">
+                        </div>
+                    </div>
+                    <label for="featuredProducts">Featured cake names</label>
+                    <input id="featuredProducts" maxlength="300" placeholder="Chocolate Cake, Black Forest Cake">
+                    <small class="field-help">Enter product names separated by commas.</small>
+                    <label for="reviewUrl">Customer review link</label>
+                    <input id="reviewUrl" type="url" maxlength="500" placeholder="https://...">
+                    <label for="cataloguePdf">Replace cake catalogue PDF</label>
+                    <input id="cataloguePdf" type="file" accept="application/pdf,.pdf">
+                    <small id="catalogueCurrent" class="field-help"></small>
+                    <button id="saveWebsiteButton" class="primary-button" type="submit">Save website content</button>
+                </form>
+                <p id="websiteStatus" class="status" role="status" aria-live="polite"></p>
+            </section>
         </section>
     </main>
+    <script src="products-defaults.js"></script>
     <script type="module" src="admin.js"></script>
 </body>
 </html>

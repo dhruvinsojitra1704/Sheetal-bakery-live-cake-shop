@@ -8,7 +8,7 @@
    WHATSAPP
 ===================================================== */
 
-const WHATSAPP_NUMBER = "917874131575";
+let WHATSAPP_NUMBER = "917874131575";
 
 
 /* =====================================================
@@ -302,6 +302,7 @@ function renderProducts(searchTerm = "") {
 
     let filteredProducts = products.filter(
         function (product) {
+            if (product.hidden) return false;
 
             const categoryMatch =
                 selectedCategory === "All" ||
@@ -2169,8 +2170,8 @@ function sendCustomCakeOrder() {
         return;
     }
 
-    if (customerPhoto && customerPhoto.size > 5 * 1024 * 1024) {
-        alert("Your photo should be less than 5 MB.");
+    if (selectedPhotos.some(file => file.size > 5 * 1024 * 1024)) {
+        alert("Each cake photo should be less than 5 MB.");
         return;
     }
 
@@ -2200,6 +2201,23 @@ function sendCustomCakeOrder() {
         `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
 
     window.open(whatsappURL, "_blank");
+
+    if (typeof window.saveSheetalCakeRequest === "function") {
+        void window.saveSheetalCakeRequest({
+            name,
+            phone,
+            flavour,
+            size,
+            requiredDate: cakeDate,
+            message,
+            paymentMethod,
+            referencePhoto,
+            customerPhoto
+        }).catch(error => {
+            console.error("Could not save the custom cake request for the owner:", error);
+            alert("WhatsApp is ready, but this request could not be saved to the shop dashboard. Please also send the details in WhatsApp.");
+        });
+    }
 
     const paymentSection =
         document.getElementById("customCakePaymentSection");
@@ -2742,10 +2760,8 @@ function sendCustomCake(event) {
     // WHATSAPP
     // ==========================================
 
-    const whatsappNumber = "917874131575";
-
     const whatsappURL =
-       `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+       `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 
     window.open(whatsappURL, "_blank");
 }
@@ -3197,13 +3213,9 @@ function placeOrder(event) {
                 "\n*SHEETAL BAKERY & LIVE CAKE SHOP* ❤️";
 
 
-            const whatsappNumber =
-                "917874131575";
-
-
             const whatsappURL =
                 "https://wa.me/" +
-                whatsappNumber +
+                WHATSAPP_NUMBER +
                 "?text=" +
                 encodeURIComponent(message);
 
@@ -3216,6 +3228,8 @@ function placeOrder(event) {
                 name: name,
                 phone: phone,
                 address: address,
+                pincode: document.getElementById("customerPincode")?.value.trim() || "",
+                orderType: document.querySelector('input[name="orderType"]:checked')?.value || "Home Delivery",
                 paymentMethod: paymentMethod,
                 items: cart.map(function (item) {
                     return {
@@ -3228,6 +3242,13 @@ function placeOrder(event) {
                 deliveryCharge: getDeliveryCharge(),
                 total: total
             };
+
+            if (typeof window.saveSheetalOrder === "function") {
+                void window.saveSheetalOrder(lastOrderDetails).catch(error => {
+                    console.error("Could not save the order for the owner:", error);
+                    alert("Your order details are ready for WhatsApp, but the order could not be saved to the shop dashboard.");
+                });
+            }
 
             const orderIdElement = document.getElementById("orderId");
             if (orderIdElement) {
@@ -3337,6 +3358,89 @@ function setupBottomNavigation() {
 }
 
 document.addEventListener("DOMContentLoaded", setupBottomNavigation);
+
+window.applySheetalWebsiteContent = function (content) {
+    const bannerTitle = document.getElementById("homepageBannerTitle");
+    const bannerDescription = document.getElementById("homepageBannerDescription");
+    const location = document.getElementById("shopLocationLabel");
+    const contactAddress = document.getElementById("bakeryContactAddress");
+    const hours = document.getElementById("shopHoursDisplay");
+    const featuredPanel = document.getElementById("featuredCakesPanel");
+    const featured = document.getElementById("featuredCakeList");
+
+    if (content.bannerTitle && bannerTitle) bannerTitle.textContent = content.bannerTitle;
+    if (content.bannerDescription && bannerDescription) {
+        bannerDescription.textContent = content.bannerDescription;
+    }
+    if (content.shopLocation && location) location.textContent = content.shopLocation;
+    if (content.shopLocation && contactAddress) {
+        contactAddress.textContent = content.shopLocation;
+    }
+    if (hours) {
+        hours.textContent = content.shopHours ? `Shop hours: ${content.shopHours}` : "";
+        hours.hidden = !content.shopHours;
+    }
+    if (featured && Array.isArray(content.featuredProducts)) {
+        featured.replaceChildren();
+        content.featuredProducts.forEach(name => {
+            const item = document.createElement("span");
+            item.textContent = name;
+            featured.append(item);
+        });
+        if (featuredPanel) featuredPanel.hidden = content.featuredProducts.length === 0;
+    }
+
+    const validWebUrl = value => {
+        try {
+            const url = new URL(value);
+            return url.protocol === "https:" || url.protocol === "http:" ? url.href : "";
+        } catch {
+            return "";
+        }
+    };
+    const reviewUrl = validWebUrl(content.reviewUrl || "");
+    if (reviewUrl) {
+        document.querySelectorAll("[data-review-link]").forEach(link => {
+            link.href = reviewUrl;
+        });
+    }
+    const catalogueUrl = validWebUrl(content.catalogueUrl || "");
+    if (catalogueUrl) {
+        document.querySelectorAll("[data-catalog-link]").forEach(link => {
+            link.href = catalogueUrl;
+        });
+    }
+
+    const updatePhoneLinks = (oldNumber, newNumber) => {
+        const normalized = String(newNumber || "").replace(/\D/g, "");
+        if (!/^[0-9]{10,15}$/.test(normalized)) return;
+        document.querySelectorAll("a[href^='tel:']").forEach(link => {
+            if (link.href.replace(/\D/g, "").endsWith(oldNumber)) {
+                link.href = `tel:+${normalized}`;
+                const numberText = link.querySelector("strong");
+                if (numberText) numberText.textContent = normalized.slice(-10);
+                if (link.matches("[data-primary-phone], [data-alternate-phone]")) {
+                    link.textContent = normalized.slice(-10);
+                }
+            }
+        });
+    };
+    const primaryPhone = String(content.shopPhone || "").replace(/\D/g, "");
+    if (/^[0-9]{10,15}$/.test(primaryPhone)) {
+        WHATSAPP_NUMBER = primaryPhone.length === 10
+            ? `91${primaryPhone}`
+            : primaryPhone;
+    }
+    updatePhoneLinks("7874131575", content.shopPhone);
+    updatePhoneLinks("9723687308", content.alternatePhone);
+    const whatsappPhone = primaryPhone.length === 10
+        ? `91${primaryPhone}`
+        : primaryPhone;
+    if (/^[0-9]{11,15}$/.test(whatsappPhone)) {
+        const whatsappLink = document.querySelector("[data-bakery-whatsapp-link]");
+        if (whatsappLink) whatsappLink.href = `https://wa.me/${whatsappPhone}`;
+    }
+};
 
 function toggleMobilePhoneMenu() {
     const menu = document.getElementById("mobilePhoneMenu");

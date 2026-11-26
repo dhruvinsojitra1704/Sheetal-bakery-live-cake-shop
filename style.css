@@ -301,6 +301,37 @@ img {
   margin-bottom: 25px;
 }
 
+.featured-cake-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 0 0 18px;
+}
+
+.featured-cake-list span {
+  border: 1px solid #eadfd6;
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: #fffaf5;
+  color: #633d2e;
+  font-size: 12px;
+}
+
+.featured-cakes-panel h3 {
+  margin: 0 0 9px;
+  color: #633d2e;
+  font-size: 15px;
+}
+
+.shop-hours-display {
+  flex-basis: 100%;
+  grid-column: 1 / -1;
+  margin: 0 0 16px;
+  color: #786b63;
+  text-align: center;
+  font-size: 14px;
+}
+
 .primary-button {
   width: fit-content;
 
@@ -8527,3 +8558,110 @@ body {
             font-size: 13px;
         }
     }
+}
+
+.bakery-contact-section {
+    padding: 58px 20px;
+    background: #fff;
+}
+
+.bakery-contact-inner {
+    width: min(1120px, 100%);
+    margin: 0 auto;
+}
+
+.bakery-contact-heading {
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.bakery-contact-heading > span {
+    color: #a66b43;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+}
+
+.bakery-contact-heading h2 {
+    margin: 8px 0;
+    color: #32241d;
+    font-family: Georgia, serif;
+    font-size: clamp(26px, 4vw, 34px);
+}
+
+.bakery-contact-heading p {
+    margin: 0;
+    color: #827267;
+    font-size: 14px;
+}
+
+.bakery-contact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.bakery-contact-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    min-height: 132px;
+    padding: 22px;
+    border: 1px solid #eadfd5;
+    border-radius: 16px;
+    background: #fffaf5;
+}
+
+.bakery-contact-icon {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    place-items: center;
+    border-radius: 13px;
+    background: #f4e7da;
+    font-size: 20px;
+}
+
+.bakery-contact-card h3 {
+    margin: 2px 0 8px;
+    color: #50392d;
+    font-size: 15px;
+}
+
+.bakery-contact-card p {
+    margin: 0 0 9px;
+    color: #786b63;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.bakery-contact-card a {
+    display: block;
+    width: fit-content;
+    margin-top: 6px;
+    color: #80503b;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.bakery-contact-card a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 700px) {
+    .bakery-contact-section {
+        padding: 42px 16px;
+    }
+
+    .bakery-contact-grid {
+        grid-template-columns: 1fr;
+        gap: 11px;
+    }
+
+    .bakery-contact-card {
+        min-height: 0;
+        padding: 17px;
+    }
+}

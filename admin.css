@@ -273,6 +273,42 @@ input[type="file"] {
     margin-bottom: 0;
 }
 
+.admin-nav {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    margin: 0 0 18px;
+    padding: 3px 1px 9px;
+}
+
+.admin-nav-button {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px 13px;
+    background: #fff;
+    color: var(--brown);
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.admin-nav-button.active {
+    border-color: var(--brown);
+    background: var(--brown);
+    color: #fff;
+}
+
+.admin-nav-button .count-badge {
+    min-width: 22px;
+    height: 22px;
+    background: #f5eadd;
+    color: #80503b;
+}
+
 .dashboard-grid {
     display: grid;
     grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1.15fr);
@@ -414,8 +450,126 @@ input[type="file"] {
     color: #a52626;
 }
 
+.management-panel {
+    padding: 24px;
+}
+
+.management-panel > .catalog-heading {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.management-panel > .catalog-heading h2 {
+    margin: 6px 0 0;
+}
+
+.record-list {
+    display: grid;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.record-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 16px;
+    padding: 16px;
+    border: 1px solid #eee5dc;
+    border-radius: 14px;
+    background: #fffdfa;
+}
+
+.record-heading,
+.record-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.record-heading {
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.record-heading h3 {
+    margin: 0;
+    color: #50392d;
+    font-size: 15px;
+}
+
+.record-heading small,
+.record-details {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.record-details {
+    margin: 10px 0 0;
+    line-height: 1.6;
+}
+
+.record-controls select {
+    width: auto;
+    min-width: 130px;
+}
+
+.compact-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    text-decoration: none;
+}
+
+.request-photos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 11px;
+}
+
+.request-photos a {
+    color: #80503b;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.website-form {
+    max-width: 680px;
+}
+
+.website-form .form-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.website-form .primary-button {
+    margin-top: 20px;
+}
+
+.website-form .field-help a {
+    color: #80503b;
+}
+
 [hidden] {
     display: none !important;
+}
+
+@media (max-width: 700px) {
+    .record-card {
+        grid-template-columns: 1fr;
+    }
+
+    .record-controls {
+        flex-wrap: wrap;
+    }
+
+    .website-form .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
 }
 
 @media (max-width: 760px) {

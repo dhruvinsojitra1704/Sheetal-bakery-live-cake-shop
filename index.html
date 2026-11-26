@@ -238,6 +238,7 @@
 
     <a href="Cake%20Manual%201.pdf"
        class="nav-btn"
+       data-catalog-link
        type="application/pdf"
        aria-label="Open cake catalog PDF">
         <span class="nav-icon">🍰</span>
@@ -268,7 +269,7 @@
             <span class="location-pin">●</span>
             <div>
                 <small>Delivering to</small>
-                <strong>Sheetal Bakery</strong>
+                <strong id="shopLocationLabel">Sheetal Bakery</strong>
             </div>
         </div>
 
@@ -287,21 +288,20 @@
         </p>
 
 
-        <h2>
+        <h2 id="homepageBannerTitle">
             Fresh Cakes<br>
             For Every<br>
             Moment
         </h2>
 
 
-        <p class="hero-description">
+        <p id="homepageBannerDescription" class="hero-description">
 
             Delicious freshly made cakes for
             birthdays, anniversaries and every
             special moment.
 
         </p>
-
 
         <button
             class="primary-button"
@@ -521,6 +521,10 @@
 
         </div>
 
+        <section id="featuredCakesPanel" class="featured-cakes-panel" hidden>
+            <h3>Featured cakes</h3>
+            <div id="featuredCakeList" class="featured-cake-list" aria-label="Featured cakes"></div>
+        </section>
 
         <div
             class="products-grid"
@@ -582,6 +586,7 @@
                 <input
                     type="text"
                     id="customName"
+                    maxlength="100"
                     placeholder="Your name"
                     required
                 >
@@ -737,6 +742,7 @@
 
             <textarea
                 id="customMessage"
+                maxlength="500"
                 placeholder="Tell us about your cake design or message..."
             ></textarea>
 
@@ -817,6 +823,7 @@
     </a>
     <a href="Cake%20Manual%201.pdf"
        class="app-nav-item"
+       data-catalog-link
        data-nav="catalog"
        type="application/pdf"
        target="_blank"
@@ -1190,6 +1197,7 @@
                 <input
                     type="text"
                     id="customerName"
+                    maxlength="100"
                     placeholder="Enter your name"
                     required
                 >
@@ -1222,6 +1230,7 @@
 
                 <textarea
                     id="customerAddress"
+                    maxlength="500"
                     placeholder="Enter complete delivery address"
                     required
                 ></textarea>
@@ -1537,6 +1546,7 @@
             <div class="reviews-buttons">
                 <a
                     href="https://maps.app.goo.gl/myKn36fq3SijcxV27"
+                    data-review-link
                     target="_blank"
                     rel="noopener noreferrer"
                     class="google-review-btn">
@@ -1548,6 +1558,7 @@
 
                 <a
                     href="https://maps.app.goo.gl/myKn36fq3SijcxV27"
+                    data-review-link
                     target="_blank"
                     rel="noopener noreferrer"
                     class="google-write-btn">
@@ -1562,12 +1573,63 @@
     </div>
 </section>
 
+<section class="bakery-contact-section" aria-labelledby="bakeryContactTitle">
+    <div class="bakery-contact-inner">
+        <div class="bakery-contact-heading">
+            <span>VISIT OR GET IN TOUCH</span>
+            <h2 id="bakeryContactTitle">Bakery Address &amp; Contact</h2>
+            <p>We’re here to help with your orders and celebrations.</p>
+        </div>
+
+        <div class="bakery-contact-grid">
+            <article class="bakery-contact-card">
+                <span class="bakery-contact-icon" aria-hidden="true">📍</span>
+                <div>
+                    <h3>Visit our bakery</h3>
+                    <p id="bakeryContactAddress">Pasodra, Surat, Gujarat</p>
+                    <a href="https://maps.app.goo.gl/myKn36fq3SijcxV27"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       data-bakery-map-link>
+                        Get directions
+                    </a>
+                </div>
+            </article>
+
+            <article class="bakery-contact-card">
+                <span class="bakery-contact-icon" aria-hidden="true">☎</span>
+                <div>
+                    <h3>Call the bakery</h3>
+                    <a href="tel:+917874131575" data-primary-phone>7874131575</a>
+                    <a href="tel:+919723687308" data-alternate-phone>9723687308</a>
+                </div>
+            </article>
+
+            <article class="bakery-contact-card">
+                <span class="bakery-contact-icon" aria-hidden="true">💬</span>
+                <div>
+                    <h3>WhatsApp us</h3>
+                    <p>Ask a question or place an order.</p>
+                    <a href="https://wa.me/917874131575"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       data-bakery-whatsapp-link>
+                        Chat on WhatsApp
+                    </a>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
 
 <!-- =====================================================
      FOOTER
 ===================================================== -->
 
 <footer class="footer">
+
+    <p id="shopHoursDisplay" class="shop-hours-display" hidden></p>
 
 
     <div class="footer-item">
@@ -1662,7 +1724,8 @@ With Love
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="products-defaults.js"></script>
 <script src="script.js"></script>
-<script type="module" src="firebase-store.js"></script>
+<script type="module" src="supabase-store.js"></script>
+<script type="module" src="supabase-public.js"></script>
 
 </body>
 
